@@ -64,15 +64,6 @@ Widget codeInputPage(
                 if (response.statusCode == 200) {
                   print(response.body);
                   // Validation logic
-                  bool isValid = true;
-                  if (isValid) {
-                    controller.nextPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.ease);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('Invalid code, please try again')));
-                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Failed to fetch data from API')));
