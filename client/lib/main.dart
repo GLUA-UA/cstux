@@ -1,5 +1,6 @@
 import 'package:client/widgets/codeinput_page.dart';
 import 'package:client/widgets/onboarding_page.dart';
+import 'package:client/widgets/nameverification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
       home: const OnBoarding(title: 'Torneio de Super Tux - GLUA'),
@@ -94,6 +95,12 @@ class _OnBoardingState extends State<OnBoarding> {
                     ),
                     codeInputPage(
                       "Código de acesso",
+                      _controller,
+                      context,
+                    ),
+                    nameVerificationPage(
+                      "É este o teu nome?",
+                      _controller,
                       context,
                     ),
                   ],
