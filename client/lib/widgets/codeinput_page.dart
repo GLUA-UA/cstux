@@ -4,26 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:client/logic/requester.dart';
 import 'package:http/http.dart' as http;
 
-void showLoadingDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 20.0),
-            Text("Please wait..."),
-          ],
-        ),
-      );
-    },
-  );
-}
-
 Widget codeInputPage(
     String title, PageController controller, BuildContext context) {
+  TextEditingController textEditingController = TextEditingController();
+  textEditingController.text = "";
+
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -57,24 +42,27 @@ Widget codeInputPage(
               fontSize: 30.0,
               fontWeight: FontWeight.normal,
             ),
+            controller: textEditingController,
             onComplete: (output) async {
-              showLoadingDialog(context);
-              try {
-                http.Response response = await getNameFromCode();
+              controller.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+              Future.delayed(const Duration(seconds: 1), () async {
+                final http.Response response = await getPlayerFromId(output);
                 if (response.statusCode == 200) {
-                  print(response.body);
-                  // Validation logic
+                  controller.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to fetch data from API')));
+                  controller.previousPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                  textEditingController.text = "";
                 }
-              } catch (e) {
-                print('Error occurred: $e');
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('An error occurred while fetching data')));
-              } finally {
-                Navigator.of(context).pop();
-              }
+              });
             },
           ),
         ),
