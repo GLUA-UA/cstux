@@ -1,11 +1,4 @@
-export type PlayerFromDB = {
-    id: number;
-    name: string;
-    levels: string;
-}
-
 export type Player = {
-    id: number;
+    id: string;
     name: string;
-    levels: Record<string, number>;
 }
