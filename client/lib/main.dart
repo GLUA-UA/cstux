@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:client/widgets/loading_page.dart';
 import 'package:client/widgets/codeinput_page.dart';
 import 'package:client/widgets/onboarding_page.dart';
 import 'package:client/widgets/nameverification_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,22 +20,23 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
-      home: const OnBoarding(title: 'Torneio de Super Tux - GLUA'),
+      home: const PageHolder(title: 'Torneio de Super Tux - GLUA'),
     );
   }
 }
 
-class OnBoarding extends StatefulWidget {
-  const OnBoarding({super.key, required this.title});
+class PageHolder extends StatefulWidget {
+  const PageHolder({super.key, required this.title});
 
   final String title;
 
   @override
-  State<OnBoarding> createState() => _OnBoardingState();
+  State<PageHolder> createState() => _PageHolderState();
 }
 
-class _OnBoardingState extends State<OnBoarding> {
-  final PageController _controller = PageController(initialPage: 0);
+class _PageHolderState extends State<PageHolder> {
+  final PageController controller = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,34 +75,40 @@ class _OnBoardingState extends State<OnBoarding> {
               Expanded(
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
-                  controller: _controller,
+                  controller: controller,
                   children: [
                     onBoardingPage(
                       "Bem-vindo ao Torneio de Super Tux",
                       "O torneio de Super Tux é um torneio onde os participantes competem entre si para chegar ao fim do jogo o mais rápido possível.",
-                      _controller,
+                      backButton: false,
+                      controller,
                       context,
                     ),
                     onBoardingPage(
                       "Para que serve este programa?",
                       "Este programa serve para que os participantes possam enviar os seus tempos de jogo para o servidor, para que possam ser comparados com os tempos dos outros participantes.",
-                      _controller,
+                      controller,
                       context,
                     ),
                     onBoardingPage(
                       "Que dados são enviados?",
                       "São enviados apenas o nome do jogador e, periodicamente, os saves do jogo, para que seja possível verificar em que nível o jogador se encontra.",
-                      _controller,
+                      controller,
                       context,
                     ),
                     codeInputPage(
                       "Código de acesso",
-                      _controller,
+                      controller,
+                      context,
+                    ),
+                    loadingPage(
+                      "Tou? Estás-me a oubir? ...",
+                      controller,
                       context,
                     ),
                     nameVerificationPage(
                       "É este o teu nome?",
-                      _controller,
+                      controller,
                       context,
                     ),
                   ],
