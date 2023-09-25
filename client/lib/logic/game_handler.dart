@@ -11,11 +11,13 @@ Future gameHandler() async {
 
     var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
     var shell = Shell(environment: env);
-    await shell.run(superTuxPath);
+    shell.run(superTuxPath);
+    //await Future.delayed(Duration(seconds: 2));
+    //shell.kill();
   } else if (Platform.isWindows) {
     final String superTuxPath = p.join(rootDir, "supertux.exe");
     var shell = Shell();
-    await shell.run(superTuxPath);
+    shell.run(superTuxPath);
   } else {
     // Unsupported platform
   }
