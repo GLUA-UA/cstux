@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:client/widgets/ongame_page.dart';
 import 'package:client/widgets/loading_page.dart';
 import 'package:client/widgets/codeinput_page.dart';
 import 'package:client/widgets/onboarding_page.dart';
@@ -36,6 +37,20 @@ class PageHolder extends StatefulWidget {
 
 class _PageHolderState extends State<PageHolder> {
   final PageController controller = PageController(initialPage: 0);
+  // Guardar os dados aqui mesmo à porco :)
+  String playerName = "";
+  void updateName(String newName) {
+    setState(() {
+      playerName = newName;
+    });
+  }
+
+  String playerId = "";
+  void updatePlayerId(String newPlayerId) {
+    setState(() {
+      playerId = newPlayerId;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +113,8 @@ class _PageHolderState extends State<PageHolder> {
                     ),
                     codeInputPage(
                       "Código de acesso",
+                      (String newPlayerId) => updatePlayerId(newPlayerId),
+                      (String newName) => updateName(newName),
                       controller,
                       context,
                     ),
@@ -108,6 +125,14 @@ class _PageHolderState extends State<PageHolder> {
                     ),
                     nameVerificationPage(
                       "É este o teu nome?",
+                      playerName,
+                      playerId.toString(),
+                      controller,
+                      context,
+                    ),
+                    onGamePage(
+                      "Deixa-nos trabalhar",
+                      "Estamos a tratar de tudo para que possas começar a jogar.",
                       controller,
                       context,
                     ),
