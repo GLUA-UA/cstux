@@ -7,8 +7,8 @@ import 'package:process_run/shell.dart';
 import 'package:client/logic/requester.dart';
 
 Future gameHandler() async {
-  Timer gameSense = Timer.periodic(
-    Duration(milliseconds: 500),
+  Timer.periodic(
+    const Duration(milliseconds: 500),
     (timer) async {
       final http.Response response = await getTournamentStatus();
       if (response.statusCode == 200) {
@@ -24,39 +24,37 @@ Future gameHandler() async {
 }
 
 Future startGame() async {
+  // FOLDER STRUCTURE
+  //
+  // [ROOTDIR]
+  // |- client.exe / client  - - - - - - - - - - - - - (this executable)
+  // |- [game_dir]
+  //    |- [user_dir]
+  //       |- config - - - - - - - - - - - - - - - - - (config files)
+  //       |- [profile1]
+  //          |- world1.stsg - - - - - - - - - - - - - (save files)
+  //    |- [supertux]
+  //       |- [bin]
+  //          |- supertux2.exe / supertux.AppImage - - (game executables)
+  //
+
   final String rootDir = p.dirname(Platform.resolvedExecutable);
+  final String userDir =
+      (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
+  final String saveFilePath = p.join(userDir, "profile1/world1.stsg");
+  String binName = "";
   if (Platform.isLinux) {
-    final String superTuxPath = p.join(rootDir, "supertux.AppImage");
-    final String userDir =
-        (await Directory(p.join(rootDir, "user_dir")).create()).path;
-
-    var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
-    var shell = Shell(environment: env);
-    shell.run(superTuxPath);
+    binName = "supertux.AppImage";
   } else if (Platform.isWindows) {
-    final String superTuxPath = p.join(rootDir, "supertux.exe");
-    var shell = Shell();
-    shell.run(superTuxPath);
-  }
-}
-
-/*
-  final String rootDir = p.dirname(Platform.resolvedExecutable);
-  if (Platform.isLinux) {
-    final String superTuxPath = p.join(rootDir, "supertux.AppImage");
-    final String userDir =
-        (await Directory(p.join(rootDir, "user_dir")).create()).path;
-
-    var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
-    var shell = Shell(environment: env);
-    shell.run(superTuxPath);
-    //await Future.delayed(Duration(seconds: 2));
-    //shell.kill();
-  } else if (Platform.isWindows) {
-    final String superTuxPath = p.join(rootDir, "supertux.exe");
-    var shell = Shell();
-    shell.run(superTuxPath);
+    binName = "supertux2.exe";
   } else {
-    // Unsupported platform
+    // Unsupported platform;
   }
-  */
+  final String binPath = p.join(rootDir, "game_dir/supertux/bin/$binName");
+
+  var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
+  var shell = Shell(environment: env);
+  shell.run(binPath);
+
+  print(saveFilePath);
+}
