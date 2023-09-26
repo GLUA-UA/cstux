@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
+import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:client/logic/requester.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:client/logic/requester.dart';
+import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
@@ -68,18 +69,21 @@ Widget codeInputPage(
               );
               Future.delayed(const Duration(seconds: 1), () async {
                 final http.Response response = await getPlayerFromId(output);
-                if (200 == 200) {
-                  //if (response.statusCode == 200) {
-                  // TODO:
-                  // playerName = response.body.name;
-                  //playerName = "Teste";
-                  //playerId = output.toUpperCase();
-                  updatePlayerId(output.toUpperCase());
-                  updatePlayerName("Name for testing");
-                  controller.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
+                if (response.statusCode == 200) {
+                  Map<String, dynamic> srlResponse = jsonDecode(response.body);
+                  if (srlResponse['success'] == true) {
+                    updatePlayerId(srlResponse['player']['id']);
+                    updatePlayerName(srlResponse['player']['name']);
+                    controller.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  } else {
+                    controller.previousPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  }
                 } else {
                   controller.previousPage(
                     duration: const Duration(milliseconds: 300),
