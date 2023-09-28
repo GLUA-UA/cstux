@@ -6,7 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:process_run/shell.dart';
 import 'package:client/logic/requester.dart';
 
-Future gameHandler() async {
+typedef TournamentStatusCallback = void Function(String tournamentStatus);
+
+Future gameHandler(
+  TournamentStatusCallback updateGameStatus,
+) async {
   Timer.periodic(
     const Duration(milliseconds: 500),
     (timer) async {
@@ -16,7 +20,10 @@ Future gameHandler() async {
         if (srlResponse['success'] == true &&
             srlResponse['tournamentStarted'] == true) {
           timer.cancel();
+          updateGameStatus("c");
           await startGame();
+        } else {
+          updateGameStatus("t");
         }
       }
     },
@@ -56,5 +63,8 @@ Future startGame() async {
   var shell = Shell(environment: env);
   shell.run(binPath);
 
-  print(saveFilePath);
+  Timer.periodic(
+    const Duration(milliseconds: 500),
+    (timer) async {},
+  );
 }

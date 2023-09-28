@@ -15,7 +15,9 @@ Widget loadingPage(
       ),
       const Expanded(
         child: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: Colors.orange,
+          ),
         ),
       ),
     ],

@@ -52,6 +52,14 @@ class _PageHolderState extends State<PageHolder> {
     });
   }
 
+  // t - trainning; c - competition; f - finnished
+  String tournamentSatus = "t";
+  void updateTournamentStatus(String newStatus) {
+    setState(() {
+      tournamentSatus = newStatus;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,12 +135,12 @@ class _PageHolderState extends State<PageHolder> {
                       "É este o teu nome?",
                       playerName,
                       playerId.toString(),
+                      (String newStatus) => updateTournamentStatus(newStatus),
                       controller,
                       context,
                     ),
                     onGamePage(
-                      "Deixa-nos trabalhar",
-                      "Estamos a tratar de tudo para que possas começar a jogar.",
+                      tournamentSatus,
                       controller,
                       context,
                     ),

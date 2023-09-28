@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:client/logic/game_handler.dart';
 
-Widget nameVerificationPage(String title, String playerName, String playerId,
-    PageController controller, BuildContext context) {
+typedef TournamentStatusCallback = void Function(String tournamentStatus);
+
+Widget nameVerificationPage(
+    String title,
+    String playerName,
+    String playerId,
+    TournamentStatusCallback updateTournamentStatus,
+    PageController controller,
+    BuildContext context) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -44,7 +51,9 @@ Widget nameVerificationPage(String title, String playerName, String playerId,
           IconButton(
             icon: const Icon(Icons.check_outlined),
             onPressed: () => {
-              gameHandler(),
+              gameHandler(
+                updateTournamentStatus,
+              ),
               controller.nextPage(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
