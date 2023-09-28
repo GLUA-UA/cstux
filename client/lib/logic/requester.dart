@@ -17,3 +17,11 @@ Future<http.Response> getTournamentStatus() async {
     return http.Response('{"error": "Could not connect to server"}', 500);
   }
 }
+
+Future<http.Response> getSaveFile(String id) async {
+  try {
+    return await http.get(Uri.parse('$baseUrl/player/$id/save'));
+  } catch (e) {
+    return http.Response('{"error": "Could not connect to server"}', 500);
+  }
+}

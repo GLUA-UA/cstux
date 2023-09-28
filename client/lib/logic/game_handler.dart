@@ -68,3 +68,29 @@ Future startGame() async {
     (timer) async {},
   );
 }
+
+Future startTrainning() async {
+  final String rootDir = p.dirname(Platform.resolvedExecutable);
+  final String userDir =
+      (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
+  final String saveFilePath = p.join(userDir, "profile1/world1.stsg");
+
+  final http.Response response = await getSaveFile("000000");
+  if (response.statusCode == 200) {
+    File(saveFilePath).writeAsBytesSync(response.bodyBytes);
+  }
+
+  String binName = "";
+  if (Platform.isLinux) {
+    binName = "supertux.AppImage";
+  } else if (Platform.isWindows) {
+    binName = "supertux2.exe";
+  } else {
+    // Unsupported platform;
+  }
+  final String binPath = p.join(rootDir, "game_dir/supertux/bin/$binName");
+
+  var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
+  var shell = Shell(environment: env);
+  shell.run(binPath);
+}
