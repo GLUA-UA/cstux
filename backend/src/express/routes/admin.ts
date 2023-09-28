@@ -24,7 +24,7 @@ export default class AdminRouter extends ExpressRouter {
             const { name } = req.body;
             if (!name) return res.status(400).json({ success: false, error: 'Missing name' });
 
-            let id = Utils.generateId();
+            let id = req.body.id ?? Utils.generateId();
 
             while (Database.getPlayer(id)) {
                 id = Utils.generateId();
