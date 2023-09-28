@@ -39,12 +39,12 @@ export default class PlayerRouter extends ExpressRouter {
             if (!id) return res.status(400).json({ success: false, error: 'Missing id' });
 
             const player = Database.getPlayer(id);
-            if (!player || id === "000000") return res.status(404).json({ success: false, error: 'Player not found' });
+            if (!player && id !== "000000") return res.status(404).json({ success: false, error: 'Player not found' });
 
             const file = SavesDatabase.getFile(id);
             if (!file) return res.status(404).json({ success: false, error: 'Save file not found' });
 
-            res.sendFile(file.toString());
+            res.send(file);
         });
 
         this.router.post('/submit/:id', upload.single('file'), async (req, res) => {
