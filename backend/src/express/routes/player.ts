@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import { readFileSync } from 'fs';
 
 import { ExpressRouter } from '../../types/ExpressRouter';
 import SuperTuxHelper from '../../supertux/SuperTuxHelper';
@@ -9,12 +10,12 @@ import SavesDatabase from '../../database/SavesDatabase';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './tmp/');
+        cb(null, SavesDatabase.tempDataDirectory);
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
     }
-})
+});
 
 const upload = multer({ storage: storage });
 
@@ -57,7 +58,7 @@ export default class PlayerRouter extends ExpressRouter {
             const { file } = req;
             if (!file) return res.status(400).json({ success: false, error: 'Missing file' });
 
-            SavesDatabase.saveFile(id, file.buffer);
+            SavesDatabase.saveFile(id, readFileSync(file.path));
 
             res.json({ success: true })
         });

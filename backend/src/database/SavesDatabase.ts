@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from
 class SavesDatabase {
 
     private dataDirectory = join(__dirname, '../../data/saves');
+    public tempDataDirectory = join(__dirname, '../../data/saves/tmp');
 
     private defaultDirectory = join(__dirname, '../../default');
     private fullGameSaveFile = join(this.defaultDirectory, './full_game.stsg');
@@ -11,6 +12,7 @@ class SavesDatabase {
 
     constructor() {
         if (!existsSync(this.dataDirectory)) mkdirSync(this.dataDirectory);
+        if (!existsSync(this.tempDataDirectory)) mkdirSync(this.tempDataDirectory);
         if (!existsSync(this.defaultDirectory)) throw new Error('Default directory does not exist');
         this.saveDefaultFile("000000", true);
     }
