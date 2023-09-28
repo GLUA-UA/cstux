@@ -69,7 +69,7 @@ Future startGame() async {
   );
 }
 
-Future startTrainning() async {
+Future startTraining() async {
   final String rootDir = p.dirname(Platform.resolvedExecutable);
   final String userDir =
       (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
@@ -77,6 +77,7 @@ Future startTrainning() async {
 
   final http.Response response = await getSaveFile("000000");
   if (response.statusCode == 200) {
+    await File(saveFilePath).create(recursive: true);
     File(saveFilePath).writeAsBytesSync(response.bodyBytes);
   }
 

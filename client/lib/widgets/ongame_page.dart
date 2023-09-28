@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:client/logic/game_handler.dart';
 
 Widget onGamePage(
     String tournamentStatus, PageController controller, BuildContext context) {
@@ -54,7 +55,7 @@ Widget onGamePage(
                         const EdgeInsets.all(20),
                       ),
                     ),
-                    onPressed: () => {},
+                    onPressed: startTraining,
                     child: const Text(
                       'Iniciar em Modo Treino',
                       style: TextStyle(
