@@ -4,6 +4,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { Player } from '../types/Player';
 import { AdminToken } from '../types/AdminToken';
 
+import SavesDatabase from './SavesDatabase';
+
 class Database {
 
     private dataDirectory = join(__dirname, '../../data');
@@ -54,11 +56,17 @@ class Database {
 
     public registerPlayer(player: Player): void {
         this.getPlayers().set(player.id, player);
+        SavesDatabase.saveDefaultFile(player.id);
         this.saveDatabase('players.json');
     }
 
     public deletePlayer(id: string): void {
         this.getPlayers().delete(id);
+        this.saveDatabase('players.json');
+    }
+
+    public updatePlayer(playerId: string, player: Player): void {
+        this.getPlayers().set(playerId, player);
         this.saveDatabase('players.json');
     }
 
