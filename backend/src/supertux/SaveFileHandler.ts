@@ -70,6 +70,9 @@ class SaveFileHandler {
         const lastLevelObject = validLevels.find((x: any) => x.levelId === lastLevel)!;
 
         player.endedTournament = levelsMap.find((x: any) => x[0] === 'yeti_boss')![1];
+        if (player.endedTournament) {
+            player.endedTournamentAt = Date.now();
+        }
         player.levelsCompleted = levelsMap.filter((x: any) => x[1]).length;
         player.lastCompletedLevel = lastLevelObject.levelName;
 

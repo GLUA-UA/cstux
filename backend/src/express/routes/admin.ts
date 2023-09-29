@@ -33,6 +33,7 @@ export default class AdminRouter extends ExpressRouter {
             const player: Player = { 
                 id, name, 
                 endedTournament: false,
+                endedTournamentAt: 0,
                 levelsCompleted: 0,
                 lastCompletedLevel: "None",
                 nextLevel: "Welcome to Antarctica!"
