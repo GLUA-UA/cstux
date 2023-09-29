@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
-      home: const PageHolder(title: 'Torneio de Super Tux - GLUA'),
+      home: const PageHolder(title: "Torneio de Super Tux - GLUA"),
     );
   }
 }
@@ -53,10 +53,10 @@ class _PageHolderState extends State<PageHolder> {
   }
 
   // t - trainning; c - competition; f - finnished
-  String tournamentSatus = "t";
+  String tournamentStatus = "t";
   void updateTournamentStatus(String newStatus) {
     setState(() {
-      tournamentSatus = newStatus;
+      tournamentStatus = newStatus;
     });
   }
 
@@ -140,7 +140,7 @@ class _PageHolderState extends State<PageHolder> {
                       context,
                     ),
                     onGamePage(
-                      tournamentSatus,
+                      tournamentStatus,
                       controller,
                       context,
                     ),

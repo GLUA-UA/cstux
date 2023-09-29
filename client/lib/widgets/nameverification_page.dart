@@ -52,6 +52,7 @@ Widget nameVerificationPage(
             icon: const Icon(Icons.check_outlined),
             onPressed: () => {
               gameHandler(
+                playerId,
                 updateTournamentStatus,
               ),
               controller.nextPage(

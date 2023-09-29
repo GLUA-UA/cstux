@@ -13,6 +13,7 @@ dependencies:
   flutter_pin_code_fields: ^2.2.0
   process_run: ^0.13.1
   path: ^1.8.0
+  watcher: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

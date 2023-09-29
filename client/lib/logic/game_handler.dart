@@ -2,13 +2,17 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:path/path.dart' as p;
-import 'package:http/http.dart' as http;
+import 'package:watcher/watcher.dart';
 import 'package:process_run/shell.dart';
+import 'package:http/http.dart' as http;
 import 'package:client/logic/requester.dart';
 
 typedef TournamentStatusCallback = void Function(String tournamentStatus);
 
+var shell;
+
 Future gameHandler(
+  String playerId,
   TournamentStatusCallback updateGameStatus,
 ) async {
   Timer.periodic(
@@ -21,7 +25,10 @@ Future gameHandler(
             srlResponse['tournamentStarted'] == true) {
           timer.cancel();
           updateGameStatus("c");
-          await startGame();
+          if (shell != null) {
+            shell.kill();
+          }
+          await startGame(playerId);
         } else {
           updateGameStatus("t");
         }
@@ -30,7 +37,7 @@ Future gameHandler(
   );
 }
 
-Future startGame() async {
+Future startGame(String playerId) async {
   // FOLDER STRUCTURE
   //
   // [ROOTDIR]
@@ -49,6 +56,13 @@ Future startGame() async {
   final String userDir =
       (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
   final String saveFilePath = p.join(userDir, "profile1/world1.stsg");
+
+  final http.Response response = await getSaveFile(playerId);
+  if (response.statusCode == 200) {
+    await File(saveFilePath).create(recursive: true);
+    File(saveFilePath).writeAsBytesSync(response.bodyBytes);
+  }
+
   String binName = "";
   if (Platform.isLinux) {
     binName = "supertux.AppImage";
@@ -60,13 +74,18 @@ Future startGame() async {
   final String binPath = p.join(rootDir, "game_dir/supertux/bin/$binName");
 
   var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
-  var shell = Shell(environment: env);
-  shell.run(binPath);
+  var cshell = Shell(environment: env);
+  cshell.run(binPath);
 
-  Timer.periodic(
-    const Duration(milliseconds: 500),
-    (timer) async {},
+  FileWatcher fileWatcher = FileWatcher(
+    saveFilePath,
+    pollingDelay: const Duration(milliseconds: 500),
   );
+  fileWatcher.events.listen((event) {
+    if (event.type == ChangeType.MODIFY) {
+      sendSaveFile(playerId, File(saveFilePath).readAsStringSync());
+    }
+  });
 }
 
 Future startTraining() async {
@@ -92,6 +111,6 @@ Future startTraining() async {
   final String binPath = p.join(rootDir, "game_dir/supertux/bin/$binName");
 
   var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
-  var shell = Shell(environment: env);
+  shell = Shell(environment: env);
   shell.run(binPath);
 }
