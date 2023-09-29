@@ -1,13 +1,13 @@
 (supertux-savegame
   (version 1)
-  (title "Icy Island (2/29)")
+  (title "Icy Island (1/29)")
   (tux
-    (bonus "fireflower")
-    (fireflowers 2)
+    (bonus "none")
+    (fireflowers 0)
     (iceflowers 0)
     (airflowers 0)
     (earthflowers 0)
-    (coins 305)
+    (coins 100)
     (worldmap-sprite "images/worldmap/common/tux.sprite")
     (last-worldmap "")
   )
@@ -39,9 +39,9 @@
           )
         )
         ("tux"
-          (y 71)
-          (x 44)
-          (back "west")
+          (y 68)
+          (x 42)
+          (back "north")
         )
         ("levels"
           ("stone_cold.stl"
@@ -93,7 +93,7 @@
             ("statistics"
               (coins-collected 0)
               (secrets-found 0)
-              (time-needed 0.5099998)
+              (time-needed 0.9149994)
               (secrets-found-total 0)
               (badguys-killed-total 0)
               (coins-collected-total 0)
@@ -135,16 +135,7 @@
           )
           ("welcome_antarctica.stl"
             (perfect #f)
-            ("statistics"
-              (coins-collected 105)
-              (secrets-found 1)
-              (time-needed 97.73684)
-              (secrets-found-total 1)
-              (badguys-killed-total 14)
-              (coins-collected-total 105)
-              (badguys-killed 14)
-            )
-            (solved #t)
+            (solved #f)
           )
           ("23rd_airborne.stl"
             (perfect #f)

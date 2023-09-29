@@ -13,6 +13,7 @@ export default class TokenRouter extends ExpressRouter {
 
     public configureRoutes(): void {
         this.router.post('/', (req, res) => {
+            if (!req.body) return res.status(400).json({ success: false, error: 'Missing body' });
             const { adminTokenKey } = req.body;
             if (!adminTokenKey) return res.status(400).json({ success: false, error: 'Missing adminTokenKey' });
 
@@ -20,30 +21,16 @@ export default class TokenRouter extends ExpressRouter {
 
             const token = AuthMiddleware.generateToken();
             const expiresAt = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
-            Database.run('INSERT INTO admin_tokens (token, expires_at) VALUES (?, ?)', token, expiresAt).then(() => {
-                res.json({ success: true, token, expiresAt });
-            }).catch((err) => {
-                res.status(500).json({ success: false, error: err });
-            });
+
+            const adminToken: AdminToken = { token, expiresAt };
+            
+            Database.registerAdminToken(adminToken);
+            res.json({ success: true, adminToken });
         });
 
         this.router.get('/', AuthMiddleware.adminTokenNeeded, (req, res) => {
-            Database.get<AdminToken>('SELECT * FROM admin_tokens').then((tokens) => {
-                res.json({ success: true, tokens });
-            }).catch((err) => {
-                res.status(500).json({ success: false, error: err });
-            });
-        });
-
-        this.router.delete('/:id', AuthMiddleware.adminTokenNeeded, (req, res) => {
-            const { id } = req.body;
-            if (!id) return res.status(400).json({ success: false, error: 'Missing id' });
-
-            Database.run('DELETE FROM admin_tokens WHERE id = ?', id).then(() => {
-                res.json({ success: true });
-            }).catch((err) => {
-                res.status(500).json({ success: false, error: err });
-            });
+            const adminTokens = Array.from(Database.getAdminTokens().values());
+            res.json({ success: true, adminTokens });
         });
     }
 }
