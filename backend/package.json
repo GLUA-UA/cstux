@@ -11,16 +11,17 @@
   "author": "FranciscoRibeiro03",
   "license": "GPL-3.0-only",
   "dependencies": {
+    "@types/multer": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "sqlite3": "^5.1.6"
+    "multer": "^1.4.5-lts.1",
+    "s-expression": "^3.1.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.17",
     "@types/node": "^20.6.0",
-    "@types/sqlite3": "^3.1.8",
     "typescript": "^5.2.2"
   }
 }

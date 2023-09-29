@@ -10,13 +10,15 @@ export class ExpressApp {
     constructor() {
         this.app = express();
         this.app.use(cors());
+        this.app.use(express.json());
         this.configureRoutes();
     }
 
     public configureRoutes(): void {
         const routerFiles = readdirSync(`${__dirname}/routes`);
         routerFiles.forEach((file) => {
-            const router = require(`./routes/${file}`).default as ExpressRouter;
+            const routerImport = require(`./routes/${file}`).default;
+            const router = new routerImport(this.app);
             this.app.use(router.endpoint, router.router);
         });
     }

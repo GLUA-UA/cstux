@@ -5,9 +5,6 @@ import { ExpressApp } from './express/ExpressApp';
 // Get environment variables from .env file
 config();
 
-// Initialize database
-Database.initDB();
-
 // Get port from environment variables
 const port = parseInt(process.env.PORT || '3000');
 

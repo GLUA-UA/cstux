@@ -1,42 +1,78 @@
-import sqlite3 from 'sqlite3';
 import { join } from 'path';
-import { existsSync, mkdirSync, readFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+
+import { Player } from '../types/Player';
+import { AdminToken } from '../types/AdminToken';
+
+import SavesDatabase from './SavesDatabase';
 
 class Database {
 
     private dataDirectory = join(__dirname, '../../data');
-    private db: sqlite3.Database;
+    
+    private databases: Record<string, any> = {
+        'players.json': new Map<string, Player>(),
+        'admintokens.json': new Map<string, AdminToken>(),
+    }
 
     constructor() {
         if (!existsSync(this.dataDirectory)) mkdirSync(this.dataDirectory);
-        this.db = new sqlite3.Database(join(this.dataDirectory, 'db.sqlite3'));
-    }
-
-    public initDB(): void {
-        const fileContents = readFileSync(join(__dirname, "../../init.sql"), 'utf-8');
-        for (const sql of fileContents.split(';')) {
-            const sqlToExecute = sql.trim();
-            if (sqlToExecute.length === 0) continue;
-            this.db.exec(sqlToExecute);
+        for (const [filename, database] of Object.entries(this.databases)) {
+            const filePath = join(this.dataDirectory, filename);
+            if (!existsSync(filePath)) {
+                this.saveDatabase(filename);
+            } else {
+                const fileContents = readFileSync(filePath, 'utf-8');
+                const parsedFileContents = JSON.parse(fileContents);
+                for (const [key, value] of Object.entries(parsedFileContents)) {
+                    database.set(key, value);
+                }
+            }
         }
     }
 
-    public async get<T>(sql: string, ...params: any[]): Promise<T[]> {
-        return new Promise((resolve, reject) => {
-            this.db.prepare(sql, params).all((err, rows) => {
-                if (err) reject(err);
-                resolve(rows as T[]);
-            });
-        });
+    public saveDatabase(filename: string): void {
+        const filePath = join(this.dataDirectory, filename);
+        const database = this.databases[filename];
+        const databaseContents = JSON.stringify(Object.fromEntries(database));
+        writeFileSync(filePath, databaseContents);
     }
 
-    public async run(sql: string, ...params: any[]): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.prepare(sql, params).run((err) => {
-                if (err) reject(err);
-                resolve();
-            });
-        });
+    public getPlayers(): Map<string, Player> {
+        return this.databases['players.json'];
+    }
+
+    public getPlayer(id: string): Player | undefined {
+        return this.getPlayers().get(id);
+    }
+
+    public getAdminTokens(): Map<string, AdminToken> {
+        return this.databases['admintokens.json'];
+    }
+
+    public getAdminToken(token: string): AdminToken | undefined {
+        return this.getAdminTokens().get(token);
+    }
+
+    public registerPlayer(player: Player): void {
+        this.getPlayers().set(player.id, player);
+        SavesDatabase.saveDefaultFile(player.id);
+        this.saveDatabase('players.json');
+    }
+
+    public deletePlayer(id: string): void {
+        this.getPlayers().delete(id);
+        this.saveDatabase('players.json');
+    }
+
+    public updatePlayer(playerId: string, player: Player): void {
+        this.getPlayers().set(playerId, player);
+        this.saveDatabase('players.json');
+    }
+
+    public registerAdminToken(adminToken: AdminToken): void {
+        this.getAdminTokens().set(adminToken.token, adminToken);
+        this.saveDatabase('admintokens.json');
     }
 
 }
