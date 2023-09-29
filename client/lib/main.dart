@@ -3,10 +3,24 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:client/widgets/ongame_page.dart';
 import 'package:client/widgets/loading_page.dart';
 import 'package:client/widgets/codeinput_page.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:client/widgets/onboarding_page.dart';
 import 'package:client/widgets/nameverification_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    minimumSize: Size(700, 550),
+    title: "Torneio de Super Tux - GLUA",
+    center: true,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   runApp(const MyApp());
 }
 
@@ -37,7 +51,7 @@ class PageHolder extends StatefulWidget {
 
 class _PageHolderState extends State<PageHolder> {
   final PageController controller = PageController(initialPage: 0);
-  // Guardar os dados aqui mesmo à porco :)
+
   String playerName = "";
   void updateName(String newName) {
     setState(() {

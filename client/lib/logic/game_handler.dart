@@ -52,40 +52,46 @@ Future startGame(String playerId) async {
   //          |- supertux2.exe / supertux.AppImage - - (game executables)
   //
 
-  final String rootDir = p.dirname(Platform.resolvedExecutable);
-  final String userDir =
-      (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
-  final String saveFilePath = p.join(userDir, "profile1/world1.stsg");
+  try {
+    final String rootDir = p.dirname(Platform.resolvedExecutable);
+    final String userDir =
+        (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
+    final String saveFilePath = p.join(userDir, "profile1/world1.stsg");
 
-  final http.Response response = await getSaveFile(playerId);
-  if (response.statusCode == 200) {
-    await File(saveFilePath).create(recursive: true);
-    File(saveFilePath).writeAsBytesSync(response.bodyBytes);
-  }
-
-  String binName = "";
-  if (Platform.isLinux) {
-    binName = "supertux.AppImage";
-  } else if (Platform.isWindows) {
-    binName = "supertux2.exe";
-  } else {
-    // Unsupported platform;
-  }
-  final String binPath = p.join(rootDir, "game_dir/supertux/bin/$binName");
-
-  var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
-  var cshell = Shell(environment: env);
-  cshell.run(binPath);
-
-  FileWatcher fileWatcher = FileWatcher(
-    saveFilePath,
-    pollingDelay: const Duration(milliseconds: 500),
-  );
-  fileWatcher.events.listen((event) {
-    if (event.type == ChangeType.MODIFY) {
-      sendSaveFile(playerId, File(saveFilePath).readAsStringSync());
+    final http.Response response = await getSaveFile(playerId);
+    if (response.statusCode == 200) {
+      await File(saveFilePath).create(recursive: true);
+      File(saveFilePath).writeAsBytesSync(response.bodyBytes);
     }
-  });
+
+    String binName = "";
+    if (Platform.isLinux) {
+      binName = "supertux.AppImage";
+    } else if (Platform.isWindows) {
+      binName = "supertux2.exe";
+    } else {
+      // Unsupported platform;
+    }
+    final String binPath = p.join(rootDir, "game_dir/supertux/bin/$binName");
+
+    var env = ShellEnvironment()..vars["SUPERTUX2_USER_DIR"] = userDir;
+    var cshell = Shell(environment: env);
+    cshell.run(binPath);
+
+    FileWatcher fileWatcher = FileWatcher(
+      saveFilePath,
+      pollingDelay: const Duration(milliseconds: 500),
+    );
+    fileWatcher.events.listen(
+      (event) {
+        if (event.type == ChangeType.MODIFY) {
+          sendSaveFile(playerId, File(saveFilePath).readAsStringSync());
+        }
+      },
+    );
+  } catch (e) {
+    print(e);
+  }
 }
 
 Future startTraining() async {
