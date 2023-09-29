@@ -93,3 +93,5 @@ class SaveFileHandler {
         Database.updatePlayer(userId, player);
     }
 }
+
+export default new SaveFileHandler();

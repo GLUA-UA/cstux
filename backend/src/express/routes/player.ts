@@ -7,6 +7,7 @@ import SuperTuxHelper from '../../supertux/SuperTuxHelper';
 
 import Database from '../../database/Database';
 import SavesDatabase from '../../database/SavesDatabase';
+import SaveFileHandler from '../../supertux/SaveFileHandler';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -63,6 +64,7 @@ export default class PlayerRouter extends ExpressRouter {
             if (!file) return res.status(400).json({ success: false, error: 'Missing file' });
 
             SavesDatabase.saveFile(id, readFileSync(file.path));
+            SaveFileHandler.handleReceivedSaveFile(id, readFileSync(file.path))
 
             res.json({ success: true })
         });
