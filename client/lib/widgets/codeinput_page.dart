@@ -72,7 +72,7 @@ Widget codeInputPage(
                 if (response.statusCode == 200) {
                   Map<String, dynamic> srlResponse = jsonDecode(response.body);
                   if (srlResponse['success'] == true) {
-                    updatePlayerId(srlResponse['player']['id']);
+                    updatePlayerId(output);
                     updatePlayerName(srlResponse['player']['name']);
                     controller.nextPage(
                       duration: const Duration(milliseconds: 300),
