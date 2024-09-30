@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = "file:./database.db"
+}
+
+model users {
+  id String @id @default(cuid())
+  firstName String
+  lastName String
+  accessCode String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userLevels userLevels[]
+}
+
+model levels {
+  id String @id @default(cuid())
+  codeName String
+  displayName String
+  order Int
+
+  userLevels userLevels[]
+}
+
+model userLevels {
+  id String @id @default(cuid())
+  userId String
+  levelId String
+  time Int
+  coins Int
+  createdAt DateTime @default(now())
+
+  user users @relation(fields: [userId], references: [id])
+  level levels @relation(fields: [levelId], references: [id])
+}
