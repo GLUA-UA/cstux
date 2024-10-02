@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "zod";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,11 @@ const formSchema = z.object({
 });
 
 export default function CreateUserForm() {
+
+  const lastNameRef = useRef<HTMLInputElement>(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -42,7 +48,15 @@ export default function CreateUserForm() {
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Fisrt Name</FormLabel>
-              <FormControl>
+              <FormControl
+                onChange={(e) => {
+                  const value = (e.target as HTMLInputElement).value;
+                  if (value.endsWith(" ")) {
+                    lastNameRef.current?.focus();
+                  }
+                  setFirstName(value);
+                }}
+              >
                 <Input
                   placeholder="First Name"
                   autoComplete="false"
@@ -62,7 +76,12 @@ export default function CreateUserForm() {
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Last Name</FormLabel>
-              <FormControl>
+              <FormControl
+                ref={lastNameRef}
+                onChange={(e) =>
+                  setLastName((e.target as HTMLInputElement).value)
+                }
+              >
                 <Input
                   placeholder="Last Name"
                   autoComplete="false"
@@ -82,7 +101,11 @@ export default function CreateUserForm() {
               Cancel
             </Button>
           </DialogClose>
-          <Button variant={"default"} type="submit">
+          <Button
+            variant={"default"}
+            type="submit"
+            disabled={!firstName || !lastName}
+          >
             Create
           </Button>
         </div>
