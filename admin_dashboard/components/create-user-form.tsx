@@ -26,17 +26,49 @@ const formSchema = z.object({
 });
 
 export default function CreateUserForm() {
-
   const lastNameRef = useRef<HTMLInputElement>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [accessCode, setAccessCode] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    setErrorMessage(null);
+    setIsSuccess(false);
+
+    try {
+      // Make the API call to create the user
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: values.firstName,
+          lastName: values.lastName,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create user");
+      }
+
+      const data = await response.json();
+      setAccessCode(data.accessCode);
+      console.log("User created with access code:", data.accessCode);
+      setIsSuccess(true);
+    } catch (error: any) {
+      setErrorMessage(error.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -45,6 +77,7 @@ export default function CreateUserForm() {
         <FormField
           control={form.control}
           name="firstName"
+          defaultValue=""
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Fisrt Name</FormLabel>
@@ -73,6 +106,7 @@ export default function CreateUserForm() {
         <FormField
           control={form.control}
           name="lastName"
+          defaultValue=""
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Last Name</FormLabel>
