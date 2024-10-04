@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -7,12 +9,47 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import CreateUserForm from "./create-user-form";
+import CreateUserForm from "@/components/create-user-form";
+import CreateUserAccessCode from "@/components/create-user-access-code";
 
 export default function CreateUserDialog() {
+  const [accessCode, setAccessCode] = useState<string | null>(null);
+  function defineAccessCode(accessCode: string | null) {
+    setAccessCode(accessCode);
+  }
+
+  const [isLoading, setIsLoading] = useState(false);
+  function defineLoading(isLoading: boolean) {
+    setIsLoading(isLoading);
+  }
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  function defineErrorMessage(errorMessage: string | null) {
+    setErrorMessage(errorMessage);
+  }
+
+  const [playerName, setPlayerName] = useState<string | null>(null);
+  function definePlayerName(playerName: string | null) {
+    setPlayerName(playerName);
+  }
+
+  function resetState() {
+    setAccessCode(null);
+    setIsLoading(false);
+    setErrorMessage(null);
+    setPlayerName(null);
+  }
+
   return (
-    <Dialog>
+    <Dialog
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          resetState();
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="default">Add Player</Button>
       </DialogTrigger>
@@ -20,10 +57,26 @@ export default function CreateUserDialog() {
         <DialogHeader>
           <DialogTitle>Add Player</DialogTitle>
           <DialogDescription>
-            Add a new player to the torunament. A access code will then be generated for the player to access the tournament.
+            Add a new player to the torunament. A access code will then be
+            generated for the player to access the tournament.
           </DialogDescription>
         </DialogHeader>
-        <CreateUserForm />
+        {!accessCode && (
+          <CreateUserForm
+            setAccessCode={defineAccessCode}
+            setIsLoading={defineLoading}
+            setErrorMessage={defineErrorMessage}
+            setPlayerName={definePlayerName}
+          />
+        )}
+        {accessCode && (
+          <CreateUserAccessCode
+            accessCode={accessCode}
+            isLoading={isLoading}
+            errorMessage={errorMessage}
+            playerName={playerName}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

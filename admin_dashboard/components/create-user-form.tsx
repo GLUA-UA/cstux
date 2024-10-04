@@ -25,14 +25,22 @@ const formSchema = z.object({
   }),
 });
 
-export default function CreateUserForm() {
+export default function CreateUserForm(
+  {
+    setAccessCode,
+    setIsLoading,
+    setErrorMessage,
+    setPlayerName,
+  }: {
+    setAccessCode: (accessCode: string) => void;
+    setIsLoading: (isLoading: boolean) => void;
+    setErrorMessage: (errorMessage: string | null) => void;
+    setPlayerName: (playerName: string | null) => void;
+  },
+) {
   const lastNameRef = useRef<HTMLInputElement>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [accessCode, setAccessCode] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,29 +49,27 @@ export default function CreateUserForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setErrorMessage(null);
-    setIsSuccess(false);
 
     try {
-      // Make the API call to create the user
       const response = await fetch("/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName: values.firstName,
-          lastName: values.lastName,
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
         }),
       });
 
+      console.error(response);
       if (!response.ok) {
         throw new Error("Failed to create user");
       }
 
       const data = await response.json();
+      setPlayerName(`${values.firstName.trim()} ${values.lastName.trim()}`);
       setAccessCode(data.accessCode);
-      console.log("User created with access code:", data.accessCode);
-      setIsSuccess(true);
     } catch (error: any) {
       setErrorMessage(error.message || "Something went wrong");
     } finally {

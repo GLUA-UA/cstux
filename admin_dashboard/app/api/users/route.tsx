@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       accessCode = generateAccessCode();
       isUnique = await isAccessCodeUnique(accessCode);
     }
-      
+
     // Creating the user in the database
     const user = await prisma.users.create({
       data: {
