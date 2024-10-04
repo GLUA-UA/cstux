@@ -13,7 +13,7 @@ const levels = [
     order: 1,
   },
   {
-    codeName: "elcome_antarctica.stl",
+    codeName: "welcome_antarctica.stl",
     displayName: "Welcome to Antarctica",
     order: 2,
   },
@@ -108,7 +108,7 @@ const levels = [
     order: 18,
   },
   {
-    codeName: "ath_in_the_clouds.stl",
+    codeName: "path_in_the_clouds.stl",
     displayName: "A Path in the Clouds",
     order: 19,
   },
@@ -133,7 +133,7 @@ const levels = [
     order: 23,
   },
   {
-    codeName: "yeti_boss",
+    codeName: "yeti_boss.stl",
     displayName: "No More Mr. Ice Guy",
     order: 24,
   }
