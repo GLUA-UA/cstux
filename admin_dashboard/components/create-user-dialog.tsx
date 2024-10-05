@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { UserPlus } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CreateUserForm from "@/components/create-user-form";
@@ -51,7 +52,9 @@ export default function CreateUserDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="default">Add Player</Button>
+        <Button variant="default" size="icon">
+          <UserPlus className="w-4 h-4" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

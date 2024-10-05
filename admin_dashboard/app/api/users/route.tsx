@@ -28,8 +28,8 @@ export async function POST(request: Request) {
       },
     });
 
-    // Returning the access code to the user
-    return new Response(JSON.stringify({ accessCode }), {
+    // Returning the user to the client
+    return new Response(JSON.stringify(user), {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });
