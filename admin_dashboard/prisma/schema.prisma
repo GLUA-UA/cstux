@@ -35,6 +35,6 @@ model userLevels {
   coins Int
   createdAt DateTime @default(now())
 
-  user users @relation(fields: [userId], references: [id])
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
   level levels @relation(fields: [levelId], references: [id])
 }
