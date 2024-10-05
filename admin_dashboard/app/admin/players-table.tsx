@@ -24,6 +24,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import CreateUserDialog from "@/components/create-user-dialog";
+import DeleteUserDialog from "@/components/delete-user-dialog";
 
 function deletePlayer(id: string) {
   // Implement me
@@ -87,13 +88,7 @@ export const columns: ColumnDef<Player>[] = [
     cell: ({ row }) => {
       const player = row.original;
       return (
-        <Button
-          variant="destructive"
-          onClick={() => deletePlayer(player.id)}
-          size="icon"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <DeleteUserDialog playerId={player.id} playerName={player.firstName + " " + player.lastName} />
       );
     },
   },

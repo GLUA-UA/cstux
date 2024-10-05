@@ -42,6 +42,20 @@ export async function POST(request: Request) {
   }
 }
 
+export async function DELETE(request: Request) {
+  try {
+    const { id } = await request.json();
+
+    // Deleting the user from the database
+    await prisma.users.delete({ where: { id } });
+
+    return new Response("User deleted", { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response("Failed to delete user", { status: 500 });
+  }
+}
+
 //
 // Auxiliary functions
 //
