@@ -12,6 +12,7 @@ model users {
   firstName String
   lastName String
   accessCode String
+  signInCount Int @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -37,4 +38,11 @@ model userLevels {
 
   user users @relation(fields: [userId], references: [id], onDelete: Cascade)
   level levels @relation(fields: [levelId], references: [id])
+}
+
+model statistics {
+  id String @id @default(cuid())
+  statName String
+  statValue String
+  statType String
 }
