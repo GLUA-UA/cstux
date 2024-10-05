@@ -32,7 +32,7 @@ model userLevels {
   id String @id @default(cuid())
   userId String
   levelId String
-  time Int
+  time Float
   coins Int
   createdAt DateTime @default(now())
 
