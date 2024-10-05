@@ -9,7 +9,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { firstName, lastName } = await request.json();
+    let { firstName, lastName } = await request.json();
+
+    firstName = firstName.trim().charAt(0).toUpperCase() + firstName.trim().slice(1).toLowerCase();
+    lastName = lastName.trim().charAt(0).toUpperCase() + lastName.trim().slice(1).toLowerCase();
 
     // Generating a unique access code
     let isUnique = false;
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
 //
 
 function generateAccessCode() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let accessCode = "";
   for (let i = 0; i < 8; i++) {
     accessCode += chars.charAt(Math.floor(Math.random() * chars.length));

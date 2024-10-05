@@ -10,7 +10,7 @@ export default function CreateUserAccessCode({
   playerName: string | null;
 }) {
   return (
-    <div className="bg-gray-100 p-4 rounded-lg">
+    <div className="bg-gray-100 p-4 rounded-lg overflow-x-auto">
       {isLoading && (
         <p className="text-md text-gray-500 text-center">Loading...</p>
       )}
@@ -23,7 +23,7 @@ export default function CreateUserAccessCode({
             Access Code for {playerName}:
           </p>
           <p className="text-4xl font-semibold text-center pt-2">
-            {accessCode}
+            {accessCode.substring(0, 4)}-{accessCode.substring(4)}
           </p>
         </>
       )}

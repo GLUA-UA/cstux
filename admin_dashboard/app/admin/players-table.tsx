@@ -58,6 +58,10 @@ export const columns: ColumnDef<Player>[] = [
   {
     accessorKey: "accessCode",
     header: "Access Code",
+    cell: ({ row }) => {
+      const player = row.original;
+      return player.accessCode.substring(0, 4) + "-" + player.accessCode.substring(4);
+    }
   },
   {
     accessorKey: "createdAt",
