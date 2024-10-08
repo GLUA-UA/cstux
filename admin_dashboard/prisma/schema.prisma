@@ -40,9 +40,9 @@ model userLevels {
   level levels @relation(fields: [levelId], references: [id])
 }
 
-model statistics {
+model states {
   id String @id @default(cuid())
-  statName String
+  statName String @unique
   statValue String
   statType String
 }

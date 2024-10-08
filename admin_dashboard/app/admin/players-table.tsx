@@ -63,20 +63,20 @@ export const columns: ColumnDef<Player>[] = [
   },
   {
     accessorKey: "signInCount",
-    header: "Sign In Count"
+    header: "SIC"
   },
   {
     accessorKey: "createdAt",
-    header: "Created At",
+    header: "Creation",
     cell: ({ row }) => {
       const createdAt = new Date(row.original.createdAt);
-      const d = createdAt.getDay();
-      const m = createdAt.getMonth();
-      const y = createdAt.getFullYear();
+      // const d = createdAt.getDay();
+      // const m = createdAt.getMonth();
+      // const y = createdAt.getFullYear();
       const h = createdAt.getHours();
       const min = createdAt.getMinutes();
       const s = createdAt.getSeconds();
-     return `${m}/${d}/${y} ${h}:${min}:${s}`;
+     return `${h}:${min}:${s}`;
     },
   },
   {
@@ -133,7 +133,7 @@ export default function PlayerTable() {
 
     const interval = setInterval(() => {
       fetchData();
-    }, 500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);

@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
-const { users, levels } = require("./data.js");
+const { users, levels, states } = require("./data.js");
+const { stat } = require("fs");
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,10 @@ try {
     await prisma.levels.deleteMany();
     console.log("Deleted all levels");
 
+    console.log("Deleting states...");
+    await prisma.states.deleteMany();
+    console.log("Deleted all states");
+
     console.log("Seeding users...");
     await prisma.users.createMany({
         data: users,
@@ -23,6 +28,12 @@ try {
         data: levels,
     });
     console.log("Seeded levels");
+
+    console.log("Seeding states...");
+    await prisma.states.createMany({
+        data: states,
+    });
+    console.log("Seeded states");
 } catch (error) {
     console.error(error);
     process.exit(1);

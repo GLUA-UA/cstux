@@ -139,4 +139,12 @@ const levels = [
   }
 ];
 
-export { users, levels };
+const states = [
+  {
+    statName: "tournamentStarted",
+    statValue: "false",
+    statType: "boolean",
+  }
+];
+
+export { users, levels, states };
