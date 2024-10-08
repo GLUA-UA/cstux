@@ -85,6 +85,11 @@ The base URL for all endpoints in development mode is: `http://localhost:3000`
 ---
 
 ### **/api/state/[state]**
+
+List of avaliablle states:
+
+- `tournamentStarted`, type `boolean`, default `false`
+
 #### **GET**
 - **Description**: Fetches the value of a specific state by its name.
 - **URL Parameters**:
