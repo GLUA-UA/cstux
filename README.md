@@ -2,6 +2,39 @@
 
 ## Development
 
+### Admin Dashboard
+
+If you haven't already installed bun, go to [bun](https://bun.sh) and follow the instructions to install it.
+
+To setup the admin dashboard, run the following commands:
+
+```bash
+git clone https://github.com/GLUA-UA/cstux
+cd cstux/admin_dashboard
+git checkout dev
+bun install
+```
+
+Then create a .env file in the admin_dashboard directory with the following content:
+
+```bash
+URL=http://localhost:3000
+```
+
+To start the admin dashboard (available at `http://localhost:3000`) run the following command:
+
+```bash
+bun run dev
+```
+
+These are useful commands for the database:
+
+```bash
+bun prisma migrate dev # sync the database with the models / initialize the database
+bun prisma seed # reset the database and seed it with the data in the seed file
+bun prisma studio # open the prisma studio to see the database
+```
+
 ## Dashboard API Documentation
 
 The base URL for all endpoints in development mode is: `http://localhost:3000`
