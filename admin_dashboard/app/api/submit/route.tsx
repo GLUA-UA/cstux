@@ -26,14 +26,36 @@ export async function POST(request: Request) {
       return new Response("User not found", { status: 404 });
     }
 
+    // Fetch the level info from the database
+    const level = await prisma.levels.findFirst({
+      where: { codeName: levelInfo.levelId },
+    });
+
+    // If the level does not exist, return a 404
+    if (!level) {
+      return new Response("Invalid level id", { status: 404 });
+    }
+
     const time = parseFloat(levelInfo.time);
     const coins = parseInt(levelInfo.coins);
+
+    // Check if the user has already completed the level
+    const duplicatedLevel = await prisma.userLevels.findFirst({
+      where: {
+        userId: user.id,
+        levelId: level.id,
+      },
+    });
+
+    if (duplicatedLevel) {
+      return new Response("Level already completed", { status: 400 });
+    }
 
     // Inserting the level info into the database
     const userLevel = await prisma.userLevels.create({
         data: {
             userId: user.id,
-            levelId: levelInfo.levelId,
+            levelId: level.id,
             time: time,
             coins: coins,
         },
