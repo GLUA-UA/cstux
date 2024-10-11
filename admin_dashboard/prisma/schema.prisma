@@ -23,7 +23,7 @@ model levels {
   id String @id @default(cuid())
   codeName String
   displayName String
-  order Int
+  order Float
 
   userLevels userLevels[]
 }

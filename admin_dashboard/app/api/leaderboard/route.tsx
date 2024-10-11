@@ -28,21 +28,26 @@ export async function GET() {
     },
   });
 
+  ///////
   const result = userSummaries.map((user) => {
     const totalTime = user.userLevels.reduce((sum, ul) => sum + ul.time, 0);
     const totalCoins = user.userLevels.reduce((sum, ul) => sum + ul.coins, 0);
     const timeBonus = totalCoins * 0.05;
     const timeWithBonus = totalTime - timeBonus;
+
+    // Group levels by unique 'order'
+    const uniqueOrders = new Set(user.userLevels.map(ul => Math.floor(ul.level.order)));
+    const levelsCompleted = uniqueOrders.size;
+
     const lastCompletedLevel =
       user.userLevels.length > 0
         ? user.userLevels[0].level.displayName
         : "None";
-    const levelsCompleted = user.userLevels.length;
 
     return {
       fullName: `${user.firstName} ${user.lastName}`,
       lastCompletedLevel,
-      levelsCompleted,
+      levelsCompleted, // Now counting grouped levels
       totalTime,
       totalCoins,
       timeBonus,
@@ -50,7 +55,13 @@ export async function GET() {
     };
   });
 
-  result.sort((a, b) => a.timeWithBonus - b.timeWithBonus);
+  // Sort by levelsCompleted (descending) and then by timeWithBonus (ascending)
+  result.sort((a, b) => {
+    if (b.levelsCompleted !== a.levelsCompleted) {
+      return b.levelsCompleted - a.levelsCompleted; // Sort by levels completed first
+    }
+    return a.timeWithBonus - b.timeWithBonus; // Sort by time with bonus if same levels completed
+  });
 
   return Response.json(result);
 }

@@ -8,134 +8,129 @@ const users = [
 
 const levels = [
   {
-    codeName: "intro.stl",
-    displayName: "Picnic With Penny",
-    order: 1,
-  },
-  {
     codeName: "welcome_antarctica.stl",
     displayName: "Welcome to Antarctica",
-    order: 2,
+    order: 1,
   },
   {
     codeName: "journey_begins.stl",
     displayName: "The Journey Begins",
-    order: 3,
+    order: 2,
   },
   {
     codeName: "somewhat_smaller_bath.stl",
     displayName: "The Somewhat Smaller Bath",
-    order: 4,
+    order: 3,
   },
   {
     codeName: "fork_in_the_road.stl",
     displayName: "A Fork in the Road",
-    order: 5,
+    order: 4,
   },
   {
     codeName: "more_snowballs.stl",
     displayName: "Oh No! More Snowballs!",
-    order: 6,
+    order: 5,
   },
   {
     codeName: "via_nostalgica.stl",
     displayName: "Via Nostalgica",
-    order: 6,
+    order: 5,
   },
   {
     codeName: "frosted_fields.stl",
     displayName: "The Frosted Fields",
-    order: 6,
+    order: 5.1,
   },
   {
     codeName: "stone_cold.stl",
     displayName: "Stone Cold",
-    order: 7,
+    order: 6,
   },
   {
     codeName: "23rd_airborne.stl",
     displayName: "23rd Airborne",
-    order: 8,
+    order: 7,
   },
   {
     codeName: "above_arctic_skies.stl",
     displayName: "Above the Arctic Skies",
-    order: 9,
+    order: 8,
   },
   {
     codeName: "night_chill.stl",
     displayName: "Night Chill",
-    order: 10,
+    order: 9,
   },
   {
     codeName: "into_stars.stl",
     displayName: "Into the Stars",
-    order: 11,
+    order: 10,
   },
   {
     codeName: "entrance_cave.stl",
     displayName: "Entrance to the Cave",
-    order: 12,
+    order: 11,
   },
   {
     codeName: "under_the_ic.stl",
     displayName: "Under the Ice",
-    order: 13,
+    order: 12,
   },
   {
     codeName: "living_inside_fridge.stl",
     displayName: "Living in a Fridge",
-    order: 14,
+    order: 13,
   },
   {
     codeName: "or_just_me.stl",
     displayName: "...Or Is It Just Me?",
-    order: 15,
+    order: 14,
   },
   {
     codeName: "miyamoto_monument.stl",
     displayName: "Miyamoto Monument",
-    order: 16,
+    order: 15,
   },
   {
     codeName: "ice_in_the_hole.stl",
     displayName: "Ice in the Hole",
-    order: 17,
+    order: 16,
   },
   {
     codeName: "end_of_tunel.stl",
     displayName: "End of the Tunnel",
-    order: 18,
+    order: 17,
   },
   {
     codeName: "path_in_the_clouds.stl",
     displayName: "A Path in the Clouds",
-    order: 19,
+    order: 18,
   },
   {
     codeName: "icy_valley.stl",
     displayName: "Icy Valley",
-    order: 20,
+    order: 19,
   },
   {
     codeName: "frozen_bridge.stl",
     displayName: "Over the Frozen Bridge",
-    order: 21,
+    order: 20,
   },
   {
     codeName: "shattered_bridge.stl",
     displayName: "The Shattered Bridge",
-    order: 22,
+    order: 21,
   },
   {
     codeName: "castle_of_nolok.stl",
     displayName: "The Castle of Nolok",
-    order: 23,
+    order: 22,
   },
   {
     codeName: "yeti_boss.stl",
     displayName: "No More Mr. Ice Guy",
-    order: 24,
+    order: 23,
   }
 ];
 
