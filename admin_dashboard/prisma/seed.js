@@ -17,11 +17,11 @@ try {
     await prisma.states.deleteMany();
     console.log("Deleted all states");
 
-    console.log("Seeding users...");
-    await prisma.users.createMany({
-        data: users,
-    });
-    console.log("Seeded users");
+    // console.log("Seeding users...");
+    // await prisma.users.createMany({
+    //     data: users,
+    // });
+    // console.log("Seeded users");
 
     console.log("Seeding levels...");
     await prisma.levels.createMany({

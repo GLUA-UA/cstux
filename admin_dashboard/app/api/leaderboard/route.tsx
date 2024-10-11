@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { time } from "console";
 
 const prisma = new PrismaClient();
 
@@ -30,6 +31,8 @@ export async function GET() {
   const result = userSummaries.map((user) => {
     const totalTime = user.userLevels.reduce((sum, ul) => sum + ul.time, 0);
     const totalCoins = user.userLevels.reduce((sum, ul) => sum + ul.coins, 0);
+    const timeBonus = totalCoins * 0.05;
+    const timeWithBonus = totalTime - timeBonus;
     const lastCompletedLevel =
       user.userLevels.length > 0
         ? user.userLevels[0].level.displayName
@@ -42,8 +45,12 @@ export async function GET() {
       levelsCompleted,
       totalTime,
       totalCoins,
+      timeBonus,
+      timeWithBonus,
     };
   });
+
+  result.sort((a, b) => a.timeWithBonus - b.timeWithBonus);
 
   return Response.json(result);
 }
