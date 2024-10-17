@@ -14,12 +14,12 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   }
 }
 
-typedef PlayerIdCallback = void Function(String playerId);
+typedef PlayerAccessCodeCallback = void Function(String playerAccessCode);
 typedef PlayerNameCallback = void Function(String playerName);
 
 Widget codeInputPage(
     String title,
-    PlayerIdCallback updatePlayerId,
+    PlayerAccessCodeCallback updatePlayerAccessCode,
     PlayerNameCallback updatePlayerName,
     PageController controller,
     BuildContext context) {
@@ -72,7 +72,7 @@ Widget codeInputPage(
                 if (response.statusCode == 200) {
                   Map<String, dynamic> srlResponse = jsonDecode(response.body);
                   if (srlResponse['accessCode'] == output) {
-                    updatePlayerId(srlResponse['id']);
+                    updatePlayerAccessCode(srlResponse['accessCode']);
                     updatePlayerName(srlResponse['firstName'] + " " + srlResponse['lastName']);
                     controller.nextPage(
                       duration: const Duration(milliseconds: 300),

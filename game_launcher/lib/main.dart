@@ -60,10 +60,10 @@ class _PageHolderState extends State<PageHolder> {
     });
   }
 
-  String playerId = "";
-  void updatePlayerId(String newPlayerId) {
+  String playerAccessCode = "";
+  void updatePlayerAccessCode(String newPlayerAccessCode) {
     setState(() {
-      playerId = newPlayerId;
+      playerAccessCode = newPlayerAccessCode;
     });
   }
 
@@ -136,7 +136,7 @@ class _PageHolderState extends State<PageHolder> {
                     ),
                     codeInputPage(
                       "Código de acesso",
-                      (String newPlayerId) => updatePlayerId(newPlayerId),
+                      (String newPlayerAccessCode) => updatePlayerAccessCode(newPlayerAccessCode),
                       (String newName) => updateName(newName),
                       controller,
                       context,
@@ -149,7 +149,7 @@ class _PageHolderState extends State<PageHolder> {
                     nameVerificationPage(
                       "É este o teu nome?",
                       playerName,
-                      playerId.toString(),
+                      playerAccessCode,
                       (String newStatus) => updateTournamentStatus(newStatus),
                       controller,
                       context,

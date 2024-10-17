@@ -12,23 +12,22 @@ typedef TournamentStatusCallback = void Function(String tournamentStatus);
 var shell;
 
 Future gameHandler(
-  String playerId,
+  String playerAccessCode,
   TournamentStatusCallback updateGameStatus,
 ) async {
   Timer.periodic(
-    const Duration(milliseconds: 500),
+    const Duration(milliseconds: 2000),
     (timer) async {
       final http.Response response = await getTournamentStatus();
       if (response.statusCode == 200) {
         Map<String, dynamic> srlResponse = jsonDecode(response.body);
-        if (srlResponse['success'] == true &&
-            srlResponse['tournamentStarted'] == true) {
+        if (srlResponse['statValue'] == "true") {
           timer.cancel();
           updateGameStatus("c");
           if (shell != null) {
             shell.kill();
           }
-          await startGame(playerId);
+          await startGame(playerAccessCode);
         } else {
           updateGameStatus("t");
         }
@@ -37,7 +36,7 @@ Future gameHandler(
   );
 }
 
-Future startGame(String playerId) async {
+Future startGame(String playerAccessCode) async {
   // FOLDER STRUCTURE
   //
   // [ROOTDIR]
@@ -50,18 +49,24 @@ Future startGame(String playerId) async {
   //    |- [supertux]
   //       |- [bin]
   //          |- supertux2.exe / supertux.AppImage - - (game executables)
+  //       |- [saves]
+  //          |- training-mode.stsg
+  //          |- competition-mode.stsg
   //
 
   try {
     final String rootDir = p.dirname(Platform.resolvedExecutable);
     final String userDir =
         (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
-    final String saveFilePath = p.join(userDir, "profile1/world1.stsg");
+    final String profileDir =
+        (await Directory(p.join(userDir, "profile1")).create()).path;
+    final String saveFilePath = p.join(profileDir, "world1.stsg");
 
-    final http.Response response = await getSaveFile(playerId);
-    if (response.statusCode == 200) {
-      await File(saveFilePath).create(recursive: true);
-      File(saveFilePath).writeAsBytesSync(response.bodyBytes);
+    final String saveFileCompetitionModePath =
+        p.join(rootDir, "game_dir/supertux/saves/competition-mode.stsg");
+
+    if (File(saveFileCompetitionModePath).existsSync()) {
+      File(saveFileCompetitionModePath).copySync(saveFilePath);
     }
 
     String binName = "";
@@ -80,12 +85,18 @@ Future startGame(String playerId) async {
 
     FileWatcher fileWatcher = FileWatcher(
       saveFilePath,
-      pollingDelay: const Duration(milliseconds: 500),
+      pollingDelay: const Duration(milliseconds: 1000),
     );
+    DateTime lastRead = DateTime.now();
     fileWatcher.events.listen(
-      (event) {
+      (event) async {
         if (event.type == ChangeType.MODIFY) {
-          sendSaveFile(playerId, File(saveFilePath).readAsStringSync());
+          DateTime lastWrite = File(saveFilePath).lastModifiedSync();
+          if (lastWrite.isAfter(lastRead)) {
+            lastRead = lastWrite;
+            sendCompletedLevelsInfo(
+                playerAccessCode, File(saveFilePath).readAsStringSync());
+          }
         }
       },
     );
@@ -98,12 +109,15 @@ Future startTraining() async {
   final String rootDir = p.dirname(Platform.resolvedExecutable);
   final String userDir =
       (await Directory(p.join(rootDir, "game_dir/user_dir")).create()).path;
-  final String saveFilePath = p.join(userDir, "profile1/world1.stsg");
+  final String profileDir =
+      (await Directory(p.join(userDir, "profile1")).create()).path;
+  final String saveFilePath = p.join(profileDir, "world1.stsg");
 
-  final http.Response response = await getSaveFile("000000");
-  if (response.statusCode == 200) {
-    await File(saveFilePath).create(recursive: true);
-    File(saveFilePath).writeAsBytesSync(response.bodyBytes);
+  final String saveFileTrainingModePath =
+      p.join(rootDir, "game_dir/supertux/saves/training-mode.stsg");
+
+  if (File(saveFileTrainingModePath).existsSync()) {
+    File(saveFileTrainingModePath).copySync(saveFilePath);
   }
 
   String binName = "";

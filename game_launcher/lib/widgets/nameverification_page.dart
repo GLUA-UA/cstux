@@ -6,7 +6,7 @@ typedef TournamentStatusCallback = void Function(String tournamentStatus);
 Widget nameVerificationPage(
     String title,
     String playerName,
-    String playerId,
+    String playerAccessCode,
     TournamentStatusCallback updateTournamentStatus,
     PageController controller,
     BuildContext context) {
@@ -24,7 +24,7 @@ Widget nameVerificationPage(
       Expanded(
         child: Center(
           child: Text(
-            "$playerName\n$playerId",
+            "$playerName\n$playerAccessCode",
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 25,
@@ -52,7 +52,7 @@ Widget nameVerificationPage(
             icon: const Icon(Icons.check_outlined),
             onPressed: () => {
               gameHandler(
-                playerId,
+                playerAccessCode,
                 updateTournamentStatus,
               ),
               controller.nextPage(
