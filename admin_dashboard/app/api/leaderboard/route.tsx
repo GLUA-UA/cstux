@@ -30,9 +30,9 @@ export async function GET() {
 
   ///////
   const result = userSummaries.map((user) => {
-    const totalTime = user.userLevels.reduce((sum, ul) => sum + ul.time, 0);
+    const totalTime = parseFloat(user.userLevels.reduce((sum, ul) => sum + ul.time, 0).toFixed(3));
     const totalCoins = user.userLevels.reduce((sum, ul) => sum + ul.coins, 0);
-    const timeBonus = totalCoins * 0.05;
+    const timeBonus = parseFloat((totalCoins * 0.05).toFixed(3));
     const timeWithBonus = totalTime - timeBonus;
 
     // Group levels by unique 'order'
