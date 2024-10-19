@@ -101,7 +101,7 @@ The base URL for all endpoints in development mode is: `http://localhost:3000`
 - **Request Body**:
   ```json
   {
-    "userAccessCode": "ABCDEF",
+    "accessCode": "ABCDEF",
     "levelInfo": {
       "levelId": "level_id.stl",
       "time": "3.14159",

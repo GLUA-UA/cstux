@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 // POST body
 // {
-//     "userAccessCode": "ABCDEF",
+//     "accessCode": "ABCDEF",
 //     "levelInfo": {
 //         "levelId": "level_id.stl",
 //         "time": "3.14159",
@@ -14,17 +14,19 @@ const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
-    const { userAccessCode, levelInfo } = await request.json();
+    const { accessCode, levelInfo } = await request.json();
 
     // Fetching the user from the database
     const user = await prisma.users.findFirst({
-      where: { accessCode: userAccessCode },
+      where: { accessCode: accessCode },
     });
     
     // If the user does not exist, return a 404
     if (!user) {
       return new Response("User not found", { status: 404 });
     }
+
+    console.log(accessCode, user.firstName, user.lastName, levelInfo);
 
     // Fetch the level info from the database
     const level = await prisma.levels.findFirst({
