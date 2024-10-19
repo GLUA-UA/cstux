@@ -162,6 +162,19 @@ class _PageHolderState extends State<PageHolder> {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    "assets/images/aettua_logo.svg",
+                    fit: BoxFit.contain,
+                    height: 30,
+                  )
+                ],
+              ),
             ],
           ),
         ),
