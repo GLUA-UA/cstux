@@ -36,6 +36,8 @@ export type Record = {
   levelsCompleted: number;
   totalTime: number;
   totalCoins: number;
+  totalBadguysKilled: number;
+  totalSecrets: number;
   timeBonus: number;
   timeWithBonus: number;
 };
@@ -75,10 +77,26 @@ export const columns: ColumnDef<Record>[] = [
   },
   {
     accessorKey: "totalCoins",
-    header: "Total Coins",
+    header: "Coins",
     cell: ({ row }) => {
       const record = row.original;
       return record.totalCoins;
+    },
+  },
+  {
+    accessorKey: "totalBadguysKilled",
+    header: "Bad Guys Killed",
+    cell: ({ row }) => {
+      const record = row.original;
+      return record.totalBadguysKilled;
+    },
+  },
+  {
+    accessorKey: "totalSecrets",
+    header: "Secrets",
+    cell: ({ row }) => {
+      const record = row.original;
+      return record.totalSecrets;
     },
   },
   {

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 import 'package:client/logic/supertux_savegame.dart';
 
+final Logger _log = Logger('Requester');
 String baseUrl = "http://localhost:3000";
 
 void setBaseUrl(String newUrl) {
@@ -33,7 +35,7 @@ Future<http.Response> getTournamentStatus() async {
   }
 }
 
-List<String> alreadySendLevels = [];
+List<String> alreadySentLevels = [];
 
 void sendCompletedLevelsInfo(String accessCode, String saveFile) {
   Map<String, dynamic> saveData = parseSuperTuxSavegame(saveFile);
@@ -42,10 +44,12 @@ void sendCompletedLevelsInfo(String accessCode, String saveFile) {
   Map<String, dynamic> completedLevels = {};
   levels.forEach((key, value) {
     if (key == 'intro.stl') return;
-    if (value['solved'] == "true" && !alreadySendLevels.contains(key)) {
+    if (value['solved'] == "true" && !alreadySentLevels.contains(key)) {
       completedLevels[key] = {
         'time': value['statistics']['time-needed'],
         'coins': value['statistics']['coins-collected'],
+        'badguys': value['statistics']['badguys-killed'],
+        'secrets': value['statistics']['secrets-found'],
       };
     }
   });
@@ -65,12 +69,14 @@ void sendCompletedLevelsInfo(String accessCode, String saveFile) {
               'levelId': key,
               'time': value['time'],
               'coins': value['coins'],
+              'badguys': value['badguys'],
+              'secrets': value['secrets'],
             }
           }),
         );
-        alreadySendLevels.add(key);
+        alreadySentLevels.add(key);
       } catch (e) {
-        print('Could not send level completion info for $key');
+        _log.warning('Could not send level completion info for $key');
       }
     });
   }

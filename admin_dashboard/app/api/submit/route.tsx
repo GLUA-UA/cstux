@@ -40,6 +40,8 @@ export async function POST(request: Request) {
 
     const time = parseFloat(levelInfo.time);
     const coins = parseInt(levelInfo.coins);
+    const badguys = parseInt(levelInfo.badguys);
+    const secrets = parseInt(levelInfo.secrets);
 
     // Check if the user has already completed the level
     const duplicatedLevel = await prisma.userLevels.findFirst({
@@ -60,6 +62,8 @@ export async function POST(request: Request) {
             levelId: level.id,
             time: time,
             coins: coins,
+            badguys: badguys,
+            secrets: secrets,
         },
     });
 

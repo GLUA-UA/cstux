@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { time } from "console";
 
 const prisma = new PrismaClient();
 
@@ -18,6 +17,8 @@ export async function GET() {
           },
           time: true,
           coins: true,
+          badguys: true,
+          secrets: true,
         },
         orderBy: {
           level: {
@@ -32,8 +33,14 @@ export async function GET() {
   const result = userSummaries.map((user) => {
     const totalTime = parseFloat(user.userLevels.reduce((sum, ul) => sum + ul.time, 0).toFixed(3));
     const totalCoins = user.userLevels.reduce((sum, ul) => sum + ul.coins, 0);
-    const timeBonus = parseFloat((totalCoins * 0.05).toFixed(3));
-    const timeWithBonus = totalTime - timeBonus;
+    const totalBadguysKilled = user.userLevels.reduce((sum, ul) => sum + ul.badguys, 0);
+    const totalSecrets = user.userLevels.reduce((sum, ul) => sum + ul.secrets, 0);
+
+    const timeBonus = parseFloat((
+      totalCoins * 0.07 + totalBadguysKilled * 0.07 + totalSecrets * 5
+    ).toFixed(3));
+
+    const timeWithBonus = parseFloat((totalTime - timeBonus).toFixed(3));
 
     // Group levels by unique 'order'
     const uniqueOrders = new Set(user.userLevels.map(ul => Math.floor(ul.level.order)));
@@ -50,6 +57,8 @@ export async function GET() {
       levelsCompleted, // Now counting grouped levels
       totalTime,
       totalCoins,
+      totalBadguysKilled,
+      totalSecrets,
       timeBonus,
       timeWithBonus,
     };
