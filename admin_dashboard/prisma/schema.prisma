@@ -17,6 +17,7 @@ model users {
   updatedAt DateTime @updatedAt
 
   userLevels userLevels[]
+  bossLevels bossLevels[]
 }
 
 model levels {
@@ -26,6 +27,7 @@ model levels {
   order Float
 
   userLevels userLevels[]
+  bossLevels bossLevels[]
 }
 
 model userLevels {
@@ -36,6 +38,17 @@ model userLevels {
   coins Int
   badguys Int
   secrets Int
+  createdAt DateTime @default(now())
+
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level levels @relation(fields: [levelId], references: [id])
+}
+
+model bossLevels {
+  id String @id @default(cuid())
+  userId String
+  levelId String
+  time Float
   createdAt DateTime @default(now())
 
   user users @relation(fields: [userId], references: [id], onDelete: Cascade)

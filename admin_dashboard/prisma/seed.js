@@ -6,14 +6,13 @@ const prisma = new PrismaClient();
 
 try {
     console.log("Deleting all data...");
+
     await prisma.users.deleteMany();
     console.log("Deleted all users");
 
-    console.log("Deleting all data...");
     await prisma.levels.deleteMany();
     console.log("Deleted all levels");
 
-    console.log("Deleting states...");
     await prisma.states.deleteMany();
     console.log("Deleted all states");
 
