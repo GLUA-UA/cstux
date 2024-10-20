@@ -62,11 +62,18 @@ Future startGame(String playerAccessCode) async {
         (await Directory(p.join(userDir, "profile1")).create()).path;
     final String saveFilePath = p.join(profileDir, "world1.stsg");
 
-    final String saveFileCompetitionModePath =
+    final String alreadyStartedFilePath =
+        p.join(rootDir, "game_dir/supertux/already-started");
+    
+    if (!File(alreadyStartedFilePath).existsSync()) {
+      final String saveFileCompetitionModePath =
         p.join(rootDir, "game_dir/supertux/saves/competition-mode.stsg");
 
-    if (File(saveFileCompetitionModePath).existsSync()) {
-      File(saveFileCompetitionModePath).copySync(saveFilePath);
+      if (File(saveFileCompetitionModePath).existsSync()) {
+        File(saveFileCompetitionModePath).copySync(saveFilePath);
+      }
+
+      File(alreadyStartedFilePath).createSync();
     }
 
     String binName = "";
