@@ -16,6 +16,16 @@ export async function POST(request: Request) {
   try {
     const { accessCode, levelInfo } = await request.json();
 
+    // Fetching the tournamentStarted state from the database
+    const tournamentStarted = await prisma.states.findFirst({
+      where: { statName: "tournamentStarted" },
+    });
+
+    // If the tournament is not started, return a 400
+    if (!tournamentStarted || tournamentStarted.statValue !== "true") {
+      return new Response("Tournament has not started", { status: 400 });
+    }
+
     // Fetching the user from the database
     const user = await prisma.users.findFirst({
       where: { accessCode: accessCode },
