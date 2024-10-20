@@ -21,6 +21,14 @@ export async function GET() {
   ///////
   const result = userSummaries.map((user) => {
     const attempts = user.bossLevels.length;
+    if (attempts === 0) {
+      return {
+        fullName: `${user.firstName} ${user.lastName}`,
+        attempts,
+        lowestTime: 0,
+        percentage: 0,
+      };
+    }
     
     const times = user.bossLevels.map(ul => ul.time);
     const lowestTime = Math.min(...times);
