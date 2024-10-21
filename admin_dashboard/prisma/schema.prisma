@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = "file:./database.db"
+}
+
+model users {
+  id String @id @default(cuid())
+  firstName String
+  lastName String
+  accessCode String
+  signInCount Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userLevels userLevels[]
+  bossLevels bossLevels[]
+}
+
+model levels {
+  id String @id @default(cuid())
+  codeName String
+  displayName String
+  order Float
+
+  userLevels userLevels[]
+  bossLevels bossLevels[]
+}
+
+model userLevels {
+  id String @id @default(cuid())
+  userId String
+  levelId String
+  time Float
+  coins Int
+  badguys Int
+  secrets Int
+  createdAt DateTime @default(now())
+
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level levels @relation(fields: [levelId], references: [id])
+}
+
+model bossLevels {
+  id String @id @default(cuid())
+  userId String
+  levelId String
+  time Float
+  createdAt DateTime @default(now())
+
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level levels @relation(fields: [levelId], references: [id])
+}
+
+model states {
+  id String @id @default(cuid())
+  statName String @unique
+  statValue String
+  statType String
+}
