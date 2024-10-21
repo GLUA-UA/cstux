@@ -57,26 +57,35 @@ void sendCompletedLevelsInfo(String accessCode, String saveFile) {
   if (completedLevels.isNotEmpty) {
     // Send the completed levels one at a time to the server
     completedLevels.forEach((key, value) async {
-      try {
-        await http.post(
-          Uri.parse('$baseUrl/api/submit'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(<String, dynamic>{
-            'accessCode': accessCode,
-            'levelInfo': {
-              'levelId': key,
-              'time': value['time'],
-              'coins': value['coins'],
-              'badguys': value['badguys'],
-              'secrets': value['secrets'],
-            }
-          }),
-        );
-        alreadySentLevels.add(key);
-      } catch (e) {
-        _log.warning('Could not send level completion info for $key');
+      // Try to send the info 5 times
+      for (int i = 0; i < 5; i++) {
+        try {
+          String url = '$baseUrl/api/submit';
+          if (key == 'yeti_boss.stl') url += '/boss';
+          await http.post(
+            Uri.parse(url),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, dynamic>{
+              'accessCode': accessCode,
+              'levelInfo': {
+                'levelId': key,
+                'time': value['time'],
+                'coins': value['coins'],
+                'badguys': value['badguys'],
+                'secrets': value['secrets'],
+              }
+            }),
+          );
+          if (key != 'yeti_boss.stl') alreadySentLevels.add(key);
+          break;
+        } catch (e) {
+          String warning = "Attempt $i: "
+              "Could not send level completion info for $key.";
+          if (i < 4) warning += " Retrying...";
+          _log.warning(warning);
+        }
       }
     });
   }
