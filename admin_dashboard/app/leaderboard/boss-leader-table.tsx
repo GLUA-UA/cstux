@@ -24,7 +24,7 @@ export type Record = {
   fullName: string;
   attempts: number;
   lowestTime: number;
-  percentage: number;
+  lowestTimeSubmissionDate: Date | null;
 };
 
 export const columns: ColumnDef<Record>[] = [
@@ -37,14 +37,6 @@ export const columns: ColumnDef<Record>[] = [
     },
   },
   {
-    accessorKey: "attempts",
-    header: "Attempts on Boss Level",
-    cell: ({ row }) => {
-      const record = row.original;
-      return record.attempts;
-    },
-  },
-  {
     accessorKey: "lowestTime",
     header: "Lowest Time",
     cell: ({ row }) => {
@@ -53,11 +45,11 @@ export const columns: ColumnDef<Record>[] = [
     },
   },
   {
-    accessorKey: "percentage",
-    header: "Percentage of Lowest Time Attempts",
+    accessorKey: "lowestTimeSubmissionDate",
+    header: "Lowest Time Submission Date",
     cell: ({ row }) => {
       const record = row.original;
-      return record.percentage + "%";
+      return record.lowestTimeSubmissionDate ?? "N/A";
     },
   },
 ];

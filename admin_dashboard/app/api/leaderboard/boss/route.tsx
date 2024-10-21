@@ -10,6 +10,7 @@ export async function GET() {
       bossLevels: {
         select: {
           time: true,
+          createdAt: true,
         },
         orderBy: {
           time: "desc", // To get the last completed level by order
@@ -24,32 +25,31 @@ export async function GET() {
     if (attempts === 0) {
       return {
         fullName: `${user.firstName} ${user.lastName}`,
-        attempts,
         lowestTime: 0,
-        percentage: 0,
+        lowestTimeSubmissionDate: null,
       };
     }
-    
+
     const times = user.bossLevels.map(ul => ul.time);
     const lowestTime = Math.min(...times);
-    
-    const timesOfLowest = times.filter(t => t === lowestTime).length;
-    const percentage = (timesOfLowest / attempts) * 100;
+    const lowestTimeSubmission = user.bossLevels.find(ul => ul.time === lowestTime);
+    const lowestTimeSubmissionDate = lowestTimeSubmission?.createdAt;
 
     return {
       fullName: `${user.firstName} ${user.lastName}`,
-      attempts,
       lowestTime,
-      percentage,
+      lowestTimeSubmissionDate,
     };
   });
 
-  // Sort by lowest time first, then by times of lowest
+  // Sort by lowest time first, then by submission date
   result.sort((a, b) => {
-    if (a.lowestTime !== b.lowestTime) {
-      return a.lowestTime - b.lowestTime;
+    if (a.lowestTime === b.lowestTime) {
+      if (a.lowestTimeSubmissionDate && b.lowestTimeSubmissionDate) {
+        return a.lowestTimeSubmissionDate < b.lowestTimeSubmissionDate ? -1 : 1;
+      }
     }
-    return b.percentage - a.percentage;
+    return a.lowestTime < b.lowestTime ? -1 : 1;
   });
 
   return Response.json(result);
