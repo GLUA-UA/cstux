@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import CreateUserDialog from "@/components/create-user-dialog";
 import DeleteUserDialog from "@/components/delete-user-dialog";
+import { formatDurationAsString } from "@/lib/durationParse";
 
 // // // // // // // // // // // // // // // // //
 //             COLUMNS DEFINITION               //
@@ -72,7 +73,8 @@ export const columns: ColumnDef<Record>[] = [
     header: "Total Time",
     cell: ({ row }) => {
       const record = row.original;
-      return record.totalTime;
+      // return record.totalTime;
+      return formatDurationAsString(record.totalTime * 1000);
     },
   },
   {
@@ -104,7 +106,8 @@ export const columns: ColumnDef<Record>[] = [
     header: "Time Bonus",
     cell: ({ row }) => {
       const record = row.original;
-      return record.timeBonus;
+      // return record.timeBonus;
+      return formatDurationAsString(record.timeBonus * 1000);
     },
   },
   {
@@ -112,7 +115,8 @@ export const columns: ColumnDef<Record>[] = [
     header: "Time with Bonus",
     cell: ({ row }) => {
       const record = row.original;
-      return record.timeWithBonus;
+      // return record.timeWithBonus;
+      return formatDurationAsString(record.timeWithBonus * 1000);
     },
   },
 ];

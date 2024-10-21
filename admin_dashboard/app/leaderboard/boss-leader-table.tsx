@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React, { useEffect, useState } from "react";
+import { formatDurationAsString } from "@/lib/durationParse";
 
 // // // // // // // // // // // // // // // // //
 //             COLUMNS DEFINITION               //
@@ -41,7 +42,8 @@ export const columns: ColumnDef<Record>[] = [
     header: "Lowest Time",
     cell: ({ row }) => {
       const record = row.original;
-      return record.lowestTime;
+      // return record.lowestTime;
+      return formatDurationAsString(record.lowestTime * 1000);
     },
   },
   {
