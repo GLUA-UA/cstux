@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:client/logic/game_handler.dart';
 
 Widget onGamePage(
-    String tournamentStatus, PageController controller, BuildContext context) {
+    String tournamentStatus, PageController controller, BuildContext context,
+    String playerAccessCode) {
   String title = "";
   String text = "";
 
@@ -45,25 +46,27 @@ Widget onGamePage(
                 ),
               ),
             ),
-            tournamentStatus == "t"
-                ? FilledButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        Colors.orange,
-                      ),
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.all(20),
-                      ),
-                    ),
-                    onPressed: startTraining,
-                    child: const Text(
-                      'Iniciar em Modo Treino',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  )
-                : const SizedBox(),
+            FilledButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Colors.orange,
+                ),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  const EdgeInsets.all(20),
+                ),
+              ),
+              onPressed: () {
+                tournamentStatus == "t" ?
+                  startTraining() :
+                  startGame(playerAccessCode);
+              },
+              child: Text(
+                tournamentStatus == "t" ? "Iniciar em Modo Treino" : "Abrir Jogo",
+                style: const TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            )
           ],
         ),
       ),

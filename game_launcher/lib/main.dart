@@ -158,6 +158,7 @@ class _PageHolderState extends State<PageHolder> {
                       tournamentStatus,
                       controller,
                       context,
+                      playerAccessCode,
                     ),
                   ],
                 ),
