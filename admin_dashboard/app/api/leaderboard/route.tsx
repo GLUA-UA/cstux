@@ -48,7 +48,7 @@ export async function GET() {
 
     const lastCompletedLevel =
       user.userLevels.length > 0
-        ? user.userLevels[0].level.displayName
+        ? user.userLevels[0].level.displayName + " (" + user.userLevels[0].level.order + ")"
         : "None";
 
     return {
