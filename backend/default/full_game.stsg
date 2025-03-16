@@ -1,15 +1,15 @@
 (supertux-savegame
   (version 1)
-  (title "Icy Island (29/29)")
+  (title "Rooted Forest (29/29)")
   (tux
     (bonus "fireflower")
-    (fireflowers 69)
-    (iceflowers 69)
-    (airflowers 69)
-    (earthflowers 69)
-    (coins 420)
-    (worldmap-sprite "images/worldmap/common/tux.sprite")
-    (last-worldmap "")
+    (fireflowers 1000001)
+    (iceflowers 1000000)
+    (airflowers 1000000)
+    (earthflowers 10000000)
+    (coins 9999)
+    (worldmap-sprite "/images/worldmap/common/tux.sprite")
+    (last-worldmap "/levels/world2/worldmap.stwm")
   )
   (state
     (underground #f)
@@ -17,30 +17,30 @@
       ("/levels/world1/worldmap.stwm"
         ("sprite-changes"
           ("28_50"
-            (show-stay-action #t)
+            (show-stay-action #f)
           )
           ("28_51"
             (show-stay-action #t)
           )
           ("28_23"
-            (show-stay-action #t)
+            (show-stay-action #f)
           )
           ("37_89"
-            (show-stay-action #t)
+            (show-stay-action #f)
           )
           ("38_89"
             (show-stay-action #t)
           )
           ("28_56"
-            (show-stay-action #t)
+            (show-stay-action #f)
           )
           ("28_57"
             (show-stay-action #t)
           )
         )
         ("tux"
-          (y 66)
-          (x 42)
+          (y 22)
+          (x 28)
           (back "south")
         )
         ("levels"
@@ -96,7 +96,7 @@
             )
             (solved #t)
           )
-          ("between_glaciers.stl"
+          ("crystal_mine.stl"
             (perfect #t)
             ("statistics"
               (coins-collected 0)
@@ -122,7 +122,7 @@
             )
             (solved #t)
           )
-          ("end_of_tunnel.stl"
+          ("icy_valley.stl"
             (perfect #t)
             ("statistics"
               (coins-collected 0)
@@ -161,7 +161,7 @@
             )
             (solved #t)
           )
-          ("crystal_mine.stl"
+          ("frozen_bridge.stl"
             (perfect #t)
             ("statistics"
               (coins-collected 0)
@@ -187,12 +187,12 @@
             )
             (solved #t)
           )
-          ("intro.stl"
+          ("yeti_boss.stl"
             (perfect #t)
             ("statistics"
               (coins-collected 0)
               (secrets-found 0)
-              (time-needed 1.799999)
+              (time-needed 0)
               (secrets-found-total 0)
               (badguys-killed-total 0)
               (coins-collected-total 0)
@@ -226,7 +226,7 @@
             )
             (solved #t)
           )
-          ("icy_valley.stl"
+          ("end_of_tunnel.stl"
             (perfect #t)
             ("statistics"
               (coins-collected 0)
@@ -239,16 +239,16 @@
             )
             (solved #t)
           )
-          ("frozen_bridge.stl"
+          ("between_glaciers.stl"
             (perfect #t)
             ("statistics"
-              (coins-collected 0)
-              (secrets-found 0)
-              (time-needed 0)
-              (secrets-found-total 0)
-              (badguys-killed-total 0)
-              (coins-collected-total 0)
-              (badguys-killed 0)
+              (coins-collected 95)
+              (secrets-found 2)
+              (time-needed 357.7046)
+              (secrets-found-total 2)
+              (badguys-killed-total 48)
+              (coins-collected-total 97)
+              (badguys-killed 48)
             )
             (solved #t)
           )
@@ -395,7 +395,7 @@
             )
             (solved #t)
           )
-          ("yeti_boss.stl"
+          ("frosted_fields.stl"
             (perfect #t)
             ("statistics"
               (coins-collected 0)
@@ -408,12 +408,12 @@
             )
             (solved #t)
           )
-          ("frosted_fields.stl"
+          ("intro.stl"
             (perfect #t)
             ("statistics"
               (coins-collected 0)
               (secrets-found 0)
-              (time-needed 0)
+              (time-needed 1.799999)
               (secrets-found-total 0)
               (badguys-killed-total 0)
               (coins-collected-total 0)
@@ -459,7 +459,7 @@
           ("fitr_up_boulder"
             (alpha 0)
           )
-          ("underground_wall"
+          ("fitr_down"
             (alpha 1)
           )
           ("Land_foreground_1"
@@ -474,10 +474,10 @@
           ("Land_foreground_4"
             (alpha 1)
           )
-          ("fitr_down"
+          ("pathing"
             (alpha 1)
           )
-          ("pathing"
+          ("ocean"
             (alpha 1)
           )
           ("front_waves"
@@ -486,7 +486,7 @@
           ("castle"
             (alpha 1)
           )
-          ("ocean"
+          ("underground_wall"
             (alpha 1)
           )
           ("deco"
@@ -497,11 +497,495 @@
           )
         )
       )
+      ("/levels/world2/worldmap.stwm"
+        ("sprite-changes"
+          ("36_72"
+            (show-stay-action #f)
+          )
+          ("36_30"
+            (show-stay-action #f)
+          )
+          ("36_31"
+            (show-stay-action #t)
+          )
+        )
+        ("tux"
+          (y 21)
+          (x 111)
+          (back "north")
+        )
+        ("levels"
+          ("ghost_cutscene.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("lost_village.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("through_dark.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("leaf_wind.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("the_forest_is_rotting.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("forest_intro.stl"
+            (perfect #t)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 2.099999)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("ghouls_lair.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("find_big_fish.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("ghosttrees_challenges.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("mouldy_grotto.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("darkness_awaits.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("penguin_grow_trees.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("tower_of_ghosts.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("tux_own_horror_show.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("tux_builder.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("going_underground.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("welcome_forest.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 61)
+              (secrets-found 1)
+              (time-needed 144.5049)
+              (secrets-found-total 1)
+              (badguys-killed-total 13)
+              (coins-collected-total 61)
+              (badguys-killed 13)
+            )
+            (solved #t)
+          )
+          ("wooden_roots.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("beside_bushes.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("owls_again.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("i_spy_with_my_little_eye.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("ghostly_misery.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("bouncy_coils.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("walking_leaves.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("bye_bye_forest.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("shocking.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("ancient_ruins.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("crumbling_path.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+          ("owls_skydive_commando.stl"
+            (perfect #f)
+            ("statistics"
+              (coins-collected 0)
+              (secrets-found 0)
+              (time-needed 0)
+              (secrets-found-total 0)
+              (badguys-killed-total 0)
+              (coins-collected-total 0)
+              (badguys-killed 0)
+            )
+            (solved #t)
+          )
+        )
+        ("tilemaps"
+          ("water_waves"
+            (alpha 1)
+          )
+          ("ghost_darkness"
+            (alpha 1)
+          )
+          ("ghost_edges"
+            (alpha 1)
+          )
+          ("back_trees"
+            (alpha 0)
+          )
+          ("mountain_edges"
+            (alpha 1)
+          )
+          ("land"
+            (alpha 1)
+          )
+          ("back_trees2"
+            (alpha 1)
+          )
+          ("ghost_land"
+            (alpha 1)
+          )
+          ("land_trees2"
+            (alpha 0)
+          )
+          ("land_trees3"
+            (alpha 0)
+          )
+          ("ghost_trees1"
+            (alpha 1)
+          )
+          ("land_trees1"
+            (alpha 0)
+          )
+          ("ocean"
+            (alpha 1)
+          )
+          ("convex"
+            (alpha 1)
+          )
+          ("land_trees4"
+            (alpha 0)
+          )
+          ("ghost_trees3"
+            (alpha 1)
+          )
+          ("front_waves"
+            (alpha 1)
+          )
+          ("ghost_front"
+            (alpha 1)
+          )
+          ("front_mountain"
+            (alpha 1)
+          )
+          ("shade"
+            (alpha 1)
+          )
+          ("ghost_back"
+            (alpha 1)
+          )
+          ("ghost_trees2"
+            (alpha 1)
+          )
+          ("decoration"
+            (alpha 1)
+          )
+          ("ghost_trees0"
+            (alpha 1)
+          )
+          ("ghost_convex"
+            (alpha 1)
+          )
+          ("back_mountain"
+            (alpha 1)
+          )
+          ("pathing"
+            (alpha 1)
+          )
+          ("ghost_trees4"
+            (alpha 1)
+          )
+        )
+      )
     )
-    (ambient_r 1)
-    (ambient_g 1)
-    (fitr_up #t)
     (ambient_b 1)
+    (ambient_g 1)
+    (ghostforest #t)
+    (ambient_r 1)
+    (fitr_up #t)
     (fitr_down #t)
     (iv_secret #t)
   )
