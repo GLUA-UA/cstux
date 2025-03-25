@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { BASE_URL, OPEN_GRAPH_IMAGE } from "@/config";
 
 const title = "GLUA's Supertux Tournament";
@@ -109,6 +110,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
