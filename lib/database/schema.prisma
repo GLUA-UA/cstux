@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("NEXT_PUBLIC_DATABASE_URL")
+}
+
+// Define user roles or statuses if they are fixed
+enum UserStatusValue {
+  LOGGED_IN
+  LOGGED_OUT
+  IDLE
+  PLAYING
+  COMPLETED
+}
+
+// Admin User model: Represents admin users with elevated privileges
+model AdminUser {
+  id         String   @id @default(cuid()) // Unique ID for the admin user
+  name       String                        // Admin user's display name
+  email      String   @unique              // Unique email for the admin user
+  password   String                        // Password for the admin user (hashed)
+  createdAt  DateTime @default(now())      // Timestamp of admin user creation
+  updatedAt  DateTime @updatedAt           // Timestamp of last admin user update
+
+  @@map("admin_users")
+}
+
+// User model: Represents players or users of the application
+model User {
+  id         String   @id @default(cuid()) // Unique ID for the user
+  name       String                        // User's display name
+  accessCode String   @unique              // Unique code used for login
+  createdAt  DateTime @default(now())      // Timestamp of user creation
+  updatedAt  DateTime @updatedAt           // Timestamp of last user update
+
+  // --- Relations ---
+  statuses      UserStatus[]
+  token         Token? 
+  levelProgress UserLevel[]
+
+  @@map("users")
+}
+
+// UserStatus model: Tracks the status history of a user
+model UserStatus {
+  id        String          @id @default(cuid()) // Unique ID for the status entry
+  status    UserStatusValue                      // The status value (using enum for type safety)
+  curentLevel String?                            // The current level the user is on (optional)
+  createdAt DateTime        @default(now())      // Timestamp when this status was set
+
+  // --- Relations ---
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_statuses")
+}
+
+// Token model: Represents authentication tokens for users
+model Token {
+  id         String   @id @default(cuid()) // Unique ID for the token entry
+  token      String   @unique              // The actual token string (must be unique)
+  expiresAt  DateTime                      // Timestamp when the token expires
+  createdAt  DateTime @default(now())      // Timestamp when the token was created
+
+  // --- Relations ---
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tokens")
+}
+
+// Level model: Represents the game levels
+model Level {
+  id        String      @id @default(cuid()) // Unique ID for the level
+  levelCode String      @unique              // A unique identifier for the level (e.g., "Level_Forest")
+  name      String                           // Display name of the level (e.g., "The Dark Forest")
+  order     Int         @unique              // Unique integer defining the sequence/order of levels
+
+  // --- Relations ---
+  // A level can be completed by multiple users (multiple UserLevel entries)
+  userCompletions UserLevel[]
+
+  @@map("levels")
+}
+
+// UserLevel model: Represents a user's completion record for a specific level (join table)
+model UserLevel {
+  id        String   @id @default(cuid()) // Unique ID for this completion record
+  time      Int                           // Time taken in seconds or milliseconds
+  badGuys   Int                           // Number of bad guys defeated
+  coins     Int                           // Number of coins collected
+  secrets   Int                           // Number of secrets found
+  timeBonus Int                           // Bonus score related to time
+  finalTime Int                           // Final score after all calculations
+  createdAt DateTime @default(now())      // Timestamp when this record was created
+
+  // --- Relations ---
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  levelId String
+  level   Level  @relation(fields: [levelId], references: [id], onDelete: Restrict)
+
+  // --- Constraints and Indexes ---
+  @@unique([userId, levelId]) // Ensure a user can only have one record per level
+  @@index([userId])           // Index for faster lookup of a user's records
+  @@index([levelId])          // Index for faster lookup of records for a specific level
+  @@index([userId, levelId])  // Index for faster lookup of a specific user on a specific level
+
+  @@map("user_levels")
+}
+
