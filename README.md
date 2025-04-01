@@ -15,8 +15,13 @@ git clone https://github.com/GLUA-UA/cstux-admin-dashboard
 cd cstux-admin-dashboard
 # Create a .env file with the necessary environment variables
 echo "NEXT_PUBLIC_BASE_URL=localhost:3000" > .env
+echo "NEXT_PUBLIC_DATABASE_URL="file:./data/dev.db"" > .env
+echo "NEXT_PUBLIC_BASE_URL=https://localhost:3000" > .env
+echo "AUTH_SECRET="hw4PDveS5+neabFfW7PrGGuAOrtci1t9ZRCEffle3VM="" > .env
 # Install dependencies
 bun install
+# Install the database
+bun run db:migrate
 # Start the development server
 bun run dev
 ```
