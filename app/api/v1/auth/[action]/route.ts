@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
+import database from "@/lib/database";
 
-// #region Placeholder Data/Logic ---
-const VALID_ACCESS_CODE = "A23G12LK";
-const MOCK_USER_DB: Record<string, { name: string }> = {
-  [VALID_ACCESS_CODE]: { name: "Alice" },
-};
+// Set of active tokens for logged-in users
 const ACTIVE_TOKENS = new Set<string>();
+
+// Helper function to create consistent plain text responses
 function createPlainTextResponse(
   data: Record<string, string>,
   status: number = 200
@@ -14,6 +13,7 @@ function createPlainTextResponse(
   const body = Object.entries(data)
     .map(([key, value]) => `${key}=${value}`)
     .join(" ");
+    
   return new NextResponse(body, {
     status: status,
     headers: {
@@ -21,11 +21,12 @@ function createPlainTextResponse(
     },
   });
 }
-// #endregion
 
-export async function GET(request: NextRequest, context: { params: { action: string } }) {
+export async function GET(
+  request: NextRequest, 
+  context: { params: { action: string } }
+) {
   const searchParams = request.nextUrl.searchParams;
-
   const { params } = await context;
   const { action } = await params;
 
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest, context: { params: { action: str
     default: {
       return createPlainTextResponse({ status: "invalid_action" }, 404);
     }
-  } 
+  }
 }
 
 async function actionLogin(accessCode: string) {
@@ -49,35 +50,104 @@ async function actionLogin(accessCode: string) {
     return createPlainTextResponse({ status: "invalid" }, 400);
   }
 
-  const user = MOCK_USER_DB[accessCode];
-  if (user) {
+  try {
+    // Find user by access code
+    const user = await database.user.findUnique({
+      where: { accessCode },
+      include: {
+        statuses: {
+          orderBy: { createdAt: 'desc' },
+          take: 1
+        }
+      }
+    });
+
+    if (!user) {
+      console.log(`Login failed for access code: ${accessCode}`);
+      return createPlainTextResponse({ status: "invalid" }, 401);
+    }
+
+    // Generate a new token
     const token = randomUUID();
     ACTIVE_TOKENS.add(token);
 
-    console.log(`Login successful for ${user.name}, token: ${token}`);
+    // Update user status to LOGGED_IN
+    await database.userStatus.create({
+      data: {
+        userId: user.id,
+        status: "LOGGED_IN"
+      }
+    });
 
+    // Create or update token in the database
+    await database.token.upsert({
+      where: { userId: user.id },
+      update: {
+        token,
+        expiresAt: new Date(Date.now() + 3 * 60 * 60 * 1000) // 3 hours from now
+      },
+      create: {
+        userId: user.id,
+        token,
+        expiresAt: new Date(Date.now() + 3 * 60 * 60 * 1000) // 3 hours from now
+      }
+    });
+
+    console.log(`Login successful for ${user.name}, token: ${token}`);
+    
     return createPlainTextResponse({
       status: "valid",
       token: token,
       name: user.name,
     });
-  } else {
-    console.log(`Login failed for access code: ${accessCode}`);
-    return createPlainTextResponse({ status: "invalid" }, 401);
+  } catch (error) {
+    console.error("Database error during login:", error);
+    return createPlainTextResponse({ 
+      status: "error", 
+      message: "Internal server error" 
+    }, 500);
   }
 }
 
 async function actionLogout(token: string) {
   if (!token) {
-    return createPlainTextResponse({ status: "invalid" }, 400); // Bad Request
+    return createPlainTextResponse({ status: "invalid" }, 400);
   }
 
-  if (ACTIVE_TOKENS.has(token)) {
-    ACTIVE_TOKENS.delete(token); // Simulate invalidating the token
-    console.log(`Logout successful for token: ${token}`); // Server log
+  try {
+    // Find the token in the database
+    const tokenRecord = await database.token.findFirst({
+      where: { token },
+      include: { user: true }
+    });
+
+    if (!tokenRecord) {
+      console.log(`Logout attempt with invalid token: ${token}`);
+      return createPlainTextResponse({ status: "invalid" }, 401);
+    }
+
+    // Remove from active tokens list
+    if (ACTIVE_TOKENS.has(token)) {
+      ACTIVE_TOKENS.delete(token);
+    }
+
+    // Update user status to LOGGED_OUT
+    await database.userStatus.create({
+      data: {
+        userId: tokenRecord.userId,
+        status: "LOGGED_OUT"
+      }
+    });
+
+    console.log(`Logout successful for user: ${tokenRecord.user.name}`);
     return createPlainTextResponse({ status: "valid" });
-  } else {
-    console.log(`Logout attempt with invalid/inactive token: ${token}`); // Server log
-    return createPlainTextResponse({ status: "invalid" }, 401); // Unauthorized
+  } catch (error) {
+    console.error("Database error during logout:", error);
+    return createPlainTextResponse({ 
+      status: "error", 
+      message: "Internal server error" 
+    }, 500);
   }
 }
+
+export const dynamic = "force-dynamic";
