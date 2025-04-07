@@ -62,6 +62,8 @@ export default function SignUpForm() {
     }
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 5000)); // I like animations, so... =D
+
       const result = await signUpAction(formData);
 
       if (result?.error) {

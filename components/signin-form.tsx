@@ -27,10 +27,12 @@ export default function SignInForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsSubmitting(true);
     setErrors({});
 
+    const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
@@ -52,6 +54,7 @@ export default function SignInForm() {
     }
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // I like animations, so... =D
       const result = await signInAction(formData);
 
       if (result?.error) {
@@ -83,7 +86,7 @@ export default function SignInForm() {
         <CardDescription>Sign in to your account.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form id={formId} action={handleSubmit}>
+        <form id={formId} onSubmit={handleSubmit}>
           <div className="grid w-full items-center gap-5">
             <div className="flex flex-col space-y-1.5">
               <Label
