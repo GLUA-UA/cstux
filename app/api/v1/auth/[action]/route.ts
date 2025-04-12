@@ -3,9 +3,6 @@ import { randomUUID } from "crypto";
 import database from "@/lib/database";
 import createPlainTextResponse from "@/lib/plain-text-response";
 
-// Set of active tokens for logged-in users
-const ACTIVE_TOKENS = new Set<string>();
-
 export async function GET(
   request: NextRequest, 
   context: { params: { action: string } }
@@ -51,12 +48,13 @@ async function actionLogin(accessCode: string) {
       return createPlainTextResponse({ status: "invalid" }, 401);
     }
 
-    // Generate a new token
+    // Generate a new unique token
     let token: string;
     do {
       token = randomUUID();
-    } while (ACTIVE_TOKENS.has(token));
-    ACTIVE_TOKENS.add(token);
+    } while (
+      await database.token.findFirst({ where: { token } })
+    );
 
     // Update user status to LOGGED_IN
     await database.userStatus.create({
@@ -71,12 +69,12 @@ async function actionLogin(accessCode: string) {
       where: { userId: user.id },
       update: {
         token,
-        expiresAt: new Date(Date.now() + 3 * 60 * 60 * 1000) // 3 hours from now
+        expiresAt: new Date(Date.now() + 4 * 60 * 60 * 1000) // 4 hours from now
       },
       create: {
         userId: user.id,
         token,
-        expiresAt: new Date(Date.now() + 3 * 60 * 60 * 1000) // 3 hours from now
+        expiresAt: new Date(Date.now() + 4 * 60 * 60 * 1000) // 4 hours from now
       }
     });
 
@@ -113,10 +111,11 @@ async function actionLogout(token: string) {
       return createPlainTextResponse({ status: "invalid" }, 401);
     }
 
-    // Remove from active tokens list
-    if (ACTIVE_TOKENS.has(token)) {
-      ACTIVE_TOKENS.delete(token);
-    }
+    // Delete the token from the database
+    await database.token.delete({
+      where: { token }
+    });
+    console.log(`Token ${token} deleted for user: ${tokenRecord.user.name}`);
 
     // Update user status to LOGGED_OUT
     await database.userStatus.create({
