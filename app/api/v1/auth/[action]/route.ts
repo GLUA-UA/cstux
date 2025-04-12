@@ -1,26 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { randomUUID } from "crypto";
 import database from "@/lib/database";
+import createPlainTextResponse from "@/lib/plain-text-response";
 
 // Set of active tokens for logged-in users
 const ACTIVE_TOKENS = new Set<string>();
-
-// Helper function to create consistent plain text responses
-function createPlainTextResponse(
-  data: Record<string, string>,
-  status: number = 200
-): NextResponse {
-  const body = Object.entries(data)
-    .map(([key, value]) => `${key}=${value}`)
-    .join(" ");
-    
-  return new NextResponse(body, {
-    status: status,
-    headers: {
-      "Content-Type": "text/plain",
-    },
-  });
-}
 
 export async function GET(
   request: NextRequest, 
@@ -68,7 +52,10 @@ async function actionLogin(accessCode: string) {
     }
 
     // Generate a new token
-    const token = randomUUID();
+    let token: string;
+    do {
+      token = randomUUID();
+    } while (ACTIVE_TOKENS.has(token));
     ACTIVE_TOKENS.add(token);
 
     // Update user status to LOGGED_IN
