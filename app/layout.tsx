@@ -5,23 +5,35 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { BASE_URL, OPEN_GRAPH_IMAGE } from "@/config";
 
-const title = "GLUA's Supertux Tournament";
-const description =
-  "Welcome to the Supertux Tournament! Join us for an exciting gaming experience with Supertux, hosted by GLUA. Compete, have fun and win amazing prizes!";
-const url = BASE_URL;
+// Application metadata constants
+const APP_METADATA = {
+  TITLE: "GLUA's Supertux Tournament",
+  DESCRIPTION: "Welcome to the Supertux Tournament! Join us for an exciting gaming experience with Supertux, hosted by GLUA. Compete, have fun and win amazing prizes!",
+  URL: BASE_URL,
+  AUTHOR: {
+    name: "GLUA - Grupo de Linux da Universidade de Aveiro",
+    url: BASE_URL,
+  },
+  KEYWORDS: "Supertux, torneio, tournament, Supertux competition, GLUA, Grupo de Linux, UA, Linux, Open Source, glua.pt, glua.ua.pt",
+} as const;
 
+// Viewport configuration
+export const viewport: Viewport = {
+  themeColor: "#ff8e2c",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
+// Application metadata configuration
 export const metadata: Metadata = {
   title: {
-    template: `${title} - %s`,
-    default: `${title}`,
+    template: `${APP_METADATA.TITLE} - %s`,
+    default: APP_METADATA.TITLE,
   },
-  description,
-  authors: [
-    {
-      name: "GLUA - Grupo de Linux da Universidade de Aveiro",
-      url,
-    },
-  ],
+  description: APP_METADATA.DESCRIPTION,
+  authors: [APP_METADATA.AUTHOR],
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
@@ -31,15 +43,15 @@ export const metadata: Metadata = {
       url: "/android-chrome-512x512.png",
     },
   },
-  metadataBase: new URL(url),
+  metadataBase: new URL(APP_METADATA.URL),
   openGraph: {
     title: {
-      template: `${title} - %s`,
-      default: `${title}`,
+      template: `${APP_METADATA.TITLE} - %s`,
+      default: APP_METADATA.TITLE,
     },
-    description,
-    url,
-    siteName: title,
+    description: APP_METADATA.DESCRIPTION,
+    url: APP_METADATA.URL,
+    siteName: APP_METADATA.TITLE,
     images: [
       {
         url: OPEN_GRAPH_IMAGE,
@@ -53,10 +65,10 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: {
-      template: `${title} - %s`,
-      default: `${title}`,
+      template: `${APP_METADATA.TITLE} - %s`,
+      default: APP_METADATA.TITLE,
     },
-    description,
+    description: APP_METADATA.DESCRIPTION,
     creator: "@glua01",
     images: [OPEN_GRAPH_IMAGE],
   },
@@ -76,14 +88,12 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
-export const viewport: Viewport = {
-  themeColor: "#ff8e2c",
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-};
-
+/**
+ * Root layout component
+ * Provides the base structure and theme configuration for the application
+ * @param children - The child components to be rendered
+ * @returns The root layout component
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -93,14 +103,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
-        <meta
-          name="keywords"
-          content="Supertux, torneio, tournament, Supertux competition, GLUA, Grupo de Linux, UA, Linux, Open Source, glua.pt, glua.ua.pt"
-        />
+        <meta name="keywords" content={APP_METADATA.KEYWORDS} />
         <script
           src="https://afarkas.github.io/lazysizes/lazysizes.min.js"
           async
-        ></script>
+        />
       </head>
       <body>
         <ThemeProvider

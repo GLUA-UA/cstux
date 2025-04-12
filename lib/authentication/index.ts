@@ -6,16 +6,38 @@ import bcrypt from "bcryptjs";
 import database from "@/lib/database";
 import { SignInSchema } from "./definitions";
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
-  pages: {
+// Authentication configuration constants
+const AUTH_CONFIG = {
+  PAGES: {
     signIn: "/auth/signin",
     error: "/auth/error",
   },
+  SESSION: {
+    STRATEGY: "jwt" as const,
+    MAX_AGE: 1 * 24 * 60 * 60, // 1 day
+  },
+  BCRYPT_ROUNDS: 12,
+} as const;
+
+/**
+ * NextAuth configuration with custom JWT and session handling
+ * - Uses credentials provider for email/password authentication
+ * - Implements custom JWT and session callbacks
+ * - Includes password hashing utility
+ */
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  pages: AUTH_CONFIG.PAGES,
   session: {
-    strategy: "jwt",
-    maxAge: 1 * 24 * 60 * 60, // 1 day
+    strategy: AUTH_CONFIG.SESSION.STRATEGY,
+    maxAge: AUTH_CONFIG.SESSION.MAX_AGE,
   },
   callbacks: {
+    /**
+     * JWT callback to add user data to the token
+     * @param token - The JWT token
+     * @param user - The authenticated user
+     * @returns The modified token
+     */
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -25,6 +47,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       return token;
     },
+
+    /**
+     * Session callback to add token data to the session
+     * @param session - The current session
+     * @param token - The JWT token
+     * @returns The modified session
+     */
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
@@ -40,8 +69,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         email: {},
         password: {},
       },
+      /**
+       * Authorizes user credentials against the database
+       * @param credentials - User credentials (email and password)
+       * @returns User object if authorized, null otherwise
+       */
       async authorize(credentials) {
-        // Validate the credentials
         const parsedCredentials = SignInSchema.safeParse({
           email: credentials?.email,
           password: credentials?.password,
@@ -53,7 +86,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const { email, password } = parsedCredentials.data;
 
-        // Find the admin user
         const adminUser = await database.adminUser.findUnique({
           where: { email },
         });
@@ -63,7 +95,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           return null;
         }
 
-        // Verify password (assuming passwords are hashed with bcrypt)
         const isPasswordValid = await bcrypt.compare(password, adminUser.password);
 
         if (!isPasswordValid) {
@@ -71,7 +102,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           return null;
         }
 
-        // Return the user object which will be saved in the JWT
         return {
           id: adminUser.id,
           name: adminUser.name,
@@ -82,9 +112,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
 });
 
-// Helper functions for auth operations
+/**
+ * Hashes a password using bcrypt
+ * @param password - The plain text password to hash
+ * @returns Promise<string> - The hashed password
+ */
 export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 12);
+  return bcrypt.hash(password, AUTH_CONFIG.BCRYPT_ROUNDS);
 }
 
 // Types

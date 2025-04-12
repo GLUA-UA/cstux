@@ -6,6 +6,20 @@ import { signIn, signOut, hashPassword } from "@/lib/authentication";
 import { SignInSchema, SignUpSchema } from "@/lib/authentication/definitions";
 import database from "@/lib/database";
 
+// Error messages for authentication actions
+const ERROR_MESSAGES = {
+  INVALID_CREDENTIALS: "Invalid email or password",
+  INVALID_FORMAT: "Invalid email or password format",
+  EMAIL_IN_USE: "Email already in use. Please use another email address.",
+  INVALID_FORM_DATA: "Invalid form data. Please check all fields and try again.",
+  SIGNUP_FAILED: "Failed to create account. Please try again later.",
+} as const;
+
+/**
+ * Handles user sign-in action
+ * @param formData - Form data containing email and password
+ * @returns Promise<{ success: true } | { error: string }> - Result of the sign-in attempt
+ */
 export async function signInAction(formData: FormData) {
   try {
     // Extract and validate inputs
@@ -16,9 +30,7 @@ export async function signInAction(formData: FormData) {
       SignInSchema.parse({ email, password });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return {
-          error: "Invalid email or password format",
-        };
+        return { error: ERROR_MESSAGES.INVALID_FORMAT };
       }
     }
 
@@ -29,9 +41,7 @@ export async function signInAction(formData: FormData) {
     });
 
     if (!userExists) {
-      return {
-        error: "Invalid email or password",
-      };
+      return { error: ERROR_MESSAGES.INVALID_CREDENTIALS };
     }
 
     // Attempt to sign in
@@ -44,12 +54,15 @@ export async function signInAction(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("Sign-in error:", error);
-    return {
-      error: "Invalid email or password",
-    };
+    return { error: ERROR_MESSAGES.INVALID_CREDENTIALS };
   }
 }
 
+/**
+ * Handles user sign-up action
+ * @param formData - Form data containing user registration details
+ * @returns Promise<{ success: true } | { error: string }> - Result of the sign-up attempt
+ */
 export async function signUpAction(formData: FormData) {
   try {
     // Extract inputs
@@ -70,9 +83,7 @@ export async function signUpAction(formData: FormData) {
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return {
-          error: "Invalid form data. Please check all fields and try again.",
-        };
+        return { error: ERROR_MESSAGES.INVALID_FORM_DATA };
       }
     }
 
@@ -83,9 +94,7 @@ export async function signUpAction(formData: FormData) {
     });
 
     if (existingUser) {
-      return {
-        error: "Email already in use. Please use another email address.",
-      };
+      return { error: ERROR_MESSAGES.EMAIL_IN_USE };
     }
 
     // Hash the password
@@ -103,12 +112,14 @@ export async function signUpAction(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("Sign-up error:", error);
-    return {
-      error: "Failed to create account. Please try again later.",
-    };
+    return { error: ERROR_MESSAGES.SIGNUP_FAILED };
   }
 }
 
+/**
+ * Handles user sign-out action
+ * Redirects to the sign-in page after signing out
+ */
 export async function signOutAction() {
   await signOut({ redirectTo: "/auth/signin" });
 }
